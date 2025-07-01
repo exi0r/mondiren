@@ -69,16 +69,82 @@
             height: 250px; /* Fixed height for consistency */
             object-fit: cover; /* Cover the area, cropping if necessary */
             border-radius: 0.75rem;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add box-shadow transition */
+            cursor: pointer; /* Indicate it's clickable */
         }
         .gallery-img:hover {
             transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
         }
         .qr-code {
             max-width: 200px;
             height: auto;
             border-radius: 0.75rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styles for the image modal/lightbox */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75); /* Darker overlay */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Ensure it's on top */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            background-color: #fff; /* White background for the image container */
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            transform: scale(0.95); /* Start slightly smaller for animation */
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1); /* Scale up to normal size */
+        }
+        .modal-image {
+            max-width: 100%;
+            max-height: 80vh; /* Limit height to fit screen */
+            display: block;
+            margin: 0 auto;
+            border-radius: 0.5rem;
+            object-fit: contain; /* Ensure the whole image is visible */
+        }
+        .modal-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .modal-close:hover {
+            background-color: #ffcc66;
+            color: white;
         }
     </style>
 </head>
@@ -182,6 +248,61 @@
         <p>&copy; 2025 Karen & Raymond. All Rights Reserved.</p>
         <p>Designed with love for our special day.</p>
     </footer>
+
+    <!-- Image Modal/Lightbox -->
+    <div id="gallery-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close">&times;</span>
+            <img src="" alt="Enlarged Wedding Photo" class="modal-image" id="modal-image">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const galleryImages = document.querySelectorAll('.gallery-img');
+            const modal = document.getElementById('gallery-modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalClose = document.getElementById('modal-close');
+
+            // Function to open the modal
+            const openModal = (imageSrc) => {
+                modalImage.src = imageSrc;
+                modal.classList.add('visible');
+            };
+
+            // Function to close the modal
+            const closeModal = () => {
+                modal.classList.remove('visible');
+                // Optional: Clear image source after transition to prevent flicker on next open
+                setTimeout(() => {
+                    modalImage.src = '';
+                }, 300); // Match CSS transition duration
+            };
+
+            // Add click listeners to all gallery images
+            galleryImages.forEach(image => {
+                image.addEventListener('click', () => {
+                    openModal(image.src);
+                });
+            });
+
+            // Add click listeners to close button and modal overlay
+            modalClose.addEventListener('click', closeModal);
+            modal.addEventListener('click', (event) => {
+                // Close modal only if clicking directly on the overlay, not the image itself
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Optional: Close modal with Escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modal.classList.contains('visible')) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
