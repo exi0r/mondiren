@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We're Getting Married! - [Couple's Names]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .hero-bg {
+            background-image: url('https://placehold.co/1200x800/e2e8f0/64748b?text=Our+Wedding');
+            background-size: cover;
+            background-position: center;
+        }
+        /* Custom modal styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Firebase and App Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, setDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Configuration ---
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-wedding-app';
+
+        // --- Initialize Firebase ---
+        let app, db, auth, userId;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        } catch (e) {
+            console.error("Firebase initialization failed:", e);
+            showModal("Error", "Could not connect to the database. Please try again later.");
+        }
+
+        // --- Authentication ---
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                userId = user.uid;
+                console.log("User is signed in with UID:", userId);
+                loadRsvps();
+            } else {
+                signInWithTokenOrAnonymously();
+            }
+        });
+
+        async function signInWithTokenOrAnonymously() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Authentication failed:", error);
+                showModal("Authentication Error", "Could not authenticate the user.");
+            }
+        }
+
+        // --- RSVP Form Submission ---
+        const rsvpForm = document.getElementById('rsvpForm');
+        rsvpForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitButton = rsvpForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+
+            const guestName = document.getElementById('guestName').value;
+            const isAttending = document.getElementById('isAttending').value;
+            const plusOne = document.getElementById('plusOne').value;
+            const dietary = document.getElementById('dietary').value;
+            const message = document.getElementById('message').value;
+
+            try {
+                // We use the guest's name (slugified) as a simple document ID to prevent duplicates
+                // In a real-world scenario, you might want a more robust unique ID system.
+                const guestId = guestName.toLowerCase().replace(/\s+/g, '-');
+                const rsvpRef = doc(db, `artifacts/${appId}/public/data/rsvps`, guestId);
+
+                await setDoc(rsvpRef, {
+                    name: guestName,
+                    attending: isAttending,
+                    plusOne: plusOne,
+                    dietaryRestrictions: dietary,
+                    message: message,
+                    submittedAt: new Date()
+                });
+                showModal("Thank You!", "Your RSVP has been successfully submitted. We can't wait to celebrate with you!");
+                rsvpForm.reset();
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                showModal("Submission Error", "There was an issue submitting your RSVP. Please try again.");
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit RSVP';
+            }
+        });
+
+        // --- Load and Display RSVPs (for the couple to see) ---
+        async function loadRsvps() {
+            const rsvpList = document.getElementById('rsvpList');
+            if (!rsvpList || !db) return;
+
+            const rsvpsCol = collection(db, `artifacts/${appId}/public/data/rsvps`);
+            const q = query(rsvpsCol);
+
+            // Use onSnapshot for real-time updates
+            onSnapshot(q, (querySnapshot) => {
+                rsvpList.innerHTML = ''; // Clear previous list
+                let attendingCount = 0;
+                let notAttendingCount = 0;
+
+                const guests = [];
+                querySnapshot.forEach((doc) => {
+                    const rsvp = doc.data();
+                    guests.push(rsvp);
+                    if (rsvp.attending === 'yes') {
+                        attendingCount++;
+                    } else {
+                        notAttendingCount++;
+                    }
+                });
+                
+                // Sort guests alphabetically by name
+                guests.sort((a, b) => a.name.localeCompare(b.name));
+
+                guests.forEach((rsvp) => {
+                    const li = document.createElement('li');
+                    li.className = `p-4 rounded-lg shadow-sm ${rsvp.attending === 'yes' ? 'bg-green-100' : 'bg-red-100'}`;
+                    li.innerHTML = `
+                        <p class="font-bold text-lg">${rsvp.name}</p>
+                        <p><strong>Attending:</strong> ${rsvp.attending === 'yes' ? 'Yes' : 'No'}</p>
+                        ${rsvp.attending === 'yes' ? `<p><strong>+1:</strong> ${rsvp.plusOne === 'yes' ? 'Yes' : 'No'}</p>` : ''}
+                        ${rsvp.dietaryRestrictions ? `<p><strong>Dietary Needs:</strong> ${rsvp.dietaryRestrictions}</p>` : ''}
+                        ${rsvp.message ? `<p class="mt-2 italic">"${rsvp.message}"</p>` : ''}
+                    `;
+                    rsvpList.appendChild(li);
+                });
+
+                document.getElementById('attendingCount').textContent = attendingCount;
+                document.getElementById('notAttendingCount').textContent = notAttendingCount;
+                document.getElementById('totalRsvps').textContent = guests.length;
+
+            }, (error) => {
+                console.error("Error fetching RSVPs:", error);
+                rsvpList.innerHTML = '<li class="text-red-500">Could not load guest list.</li>';
+            });
+        }
+        
+        // --- Modal Logic ---
+        function showModal(title, message) {
+            const modalBackdrop = document.createElement('div');
+            modalBackdrop.className = 'modal-backdrop';
+
+            const modalContent = document.createElement('div');
+            modalContent.className = 'modal-content';
+            
+            modalContent.innerHTML = `
+                <h3 class="text-2xl font-bold mb-4">${title}</h3>
+                <p class="mb-6">${message}</p>
+                <button id="closeModalBtn" class="bg-rose-500 text-white px-6 py-2 rounded-lg hover:bg-rose-600 transition-colors">Close</button>
+            `;
+
+            modalBackdrop.appendChild(modalContent);
+            document.body.appendChild(modalBackdrop);
+
+            document.getElementById('closeModalBtn').addEventListener('click', () => {
+                document.body.removeChild(modalBackdrop);
+            });
+        }
+        
+        // Expose functions to global scope if needed for inline event handlers
+        window.showModal = showModal;
+    </script>
+
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-2xl font-bold text-rose-500">
+                <a href="#">J & M</a>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#story" class="text-gray-600 hover:text-rose-500">Our Story</a>
+                <a href="#event" class="text-gray-600 hover:text-rose-500">Event Details</a>
+                <a href="#rsvp" class="text-gray-600 hover:text-rose-500">RSVP</a>
+                <a href="#gallery" class="text-gray-600 hover:text-rose-500">Gallery</a>
+                <a href="#gifts" class="text-gray-600 hover:text-rose-500">Gifts</a>
+            </div>
+            <div class="md:hidden">
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="text-gray-600 hover:text-rose-500 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+             <a href="#story" class="block py-2 text-gray-600 hover:text-rose-500">Our Story</a>
+             <a href="#event" class="block py-2 text-gray-600 hover:text-rose-500">Event Details</a>
+             <a href="#rsvp" class="block py-2 text-gray-600 hover:text-rose-500">RSVP</a>
+             <a href="#gallery" class="block py-2 text-gray-600 hover:text-rose-500">Gallery</a>
+             <a href="#gifts" class="block py-2 text-gray-600 hover:text-rose-500">Gifts</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white">
+        <div class="bg-black bg-opacity-40 h-full">
+            <div class="container mx-auto px-6 py-32 text-center">
+                <h1 class="text-5xl md:text-7xl font-bold mb-4">Karen & Raymond</h1>
+                <p class="text-lg md:text-2xl mb-8">ARE GETTING MARRIED</p>
+                <p class="text-xl md:text-3xl font-bold">October 26, 2025</p>
+                <a href="#rsvp" class="mt-8 inline-block bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-8 rounded-lg transition-colors">RSVP Now</a>
+            </div>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-6 py-16">
+        <!-- Our Story Section -->
+        <section id="story" class="mb-16 text-center">
+            <h2 class="text-4xl font-bold mb-8 text-gray-800">Our Story</h2>
+            <div class="max-w-3xl mx-auto text-left text-gray-600 leading-relaxed">
+                <p class="mb-4">Our journey began on a rainy Tuesday at a small coffee shop in the heart of the city. What started as a simple conversation over lattes quickly blossomed into a connection neither of us expected. We discovered a shared love for old movies, spicy food, and spontaneous road trips.</p>
+                <p class="mb-4">Over the next few years, we built a life filled with laughter, adventure, and unwavering support for one another. From hiking mountains to navigating the challenges of everyday life, every moment has brought us closer together.</p>
+                <p>On a quiet evening under a sky full of stars, Raymond proposed, and Karen joyfully said "yes!". We are so excited to start this next chapter of our lives together and can't wait to celebrate with you, our dearest friends and family.</p>
+            </div>
+        </section>
+
+        <!-- Event Details Section -->
+        <section id="event" class="mb-16 bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-4xl font-bold mb-8 text-center text-gray-800">Event Details</h2>
+            <div class="flex flex-wrap -mx-4">
+                <div class="w-full md:w-1/2 px-4 mb-8 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-4 text-rose-500">The Ceremony</h3>
+                    <p class="text-lg font-semibold">St. James Chapel</p>
+                    <p class="text-gray-600">123 Wedding Lane, Pasig, Metro Manila</p>
+                    <p class="text-gray-600">Saturday, October 26, 2025</p>
+                    <p class="text-gray-600">3:00 PM</p>
+                </div>
+                <div class="w-full md:w-1/2 px-4">
+                    <h3 class="text-2xl font-bold mb-4 text-rose-500">The Reception</h3>
+                    <p class="text-lg font-semibold">The Grand Ballroom</p>
+                    <p class="text-gray-600">456 Celebration Ave, Pasig, Metro Manila</p>
+                    <p class="text-gray-600">Saturday, October 26, 2025</p>
+                    <p class="text-gray-600">6:00 PM onwards</p>
+                </div>
+            </div>
+            <div class="mt-8">
+                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d123552.89981848424!2d121.01137734335937!3d14.583633999999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c7f5de310de5%3A0x49c51567543b5933!2sPasig%2C%20Metro%20Manila!5e0!3m2!1sen!2sph!4v1720000000000!5m2!1sen!2sph" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </section>
+
+        <!-- RSVP Section -->
+        <section id="rsvp" class="mb-16">
+            <h2 class="text-4xl font-bold mb-8 text-center text-gray-800">Will You Be Joining Us?</h2>
+            <div class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+                <p class="text-center text-gray-600 mb-6">Please let us know your plans by September 15, 2025.</p>
+                <form id="rsvpForm">
+                    <div class="mb-4">
+                        <label for="guestName" class="block text-gray-700 font-bold mb-2">Full Name(s)</label>
+                        <input type="text" id="guestName" name="guestName" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400" placeholder="e.g., John and Jane Doe" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="isAttending" class="block text-gray-700 font-bold mb-2">Will you be attending?</label>
+                        <select id="isAttending" name="isAttending" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400" required>
+                            <option value="yes">Joyfully Accept</option>
+                            <option value="no">Regretfully Decline</option>
+                        </select>
+                    </div>
+                     <div class="mb-4">
+                        <label for="plusOne" class="block text-gray-700 font-bold mb-2">Are you bringing a +1?</label>
+                        <select id="plusOne" name="plusOne" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400" required>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="dietary" class="block text-gray-700 font-bold mb-2">Dietary Restrictions or Allergies?</label>
+                        <input type="text" id="dietary" name="dietary" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400" placeholder="e.g., Vegetarian, nut allergy">
+                    </div>
+                    <div class="mb-6">
+                        <label for="message" class="block text-gray-700 font-bold mb-2">Leave a message for the couple (optional)</label>
+                        <textarea id="message" name="message" rows="4" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400" placeholder="Share a memory or well wishes!"></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-8 rounded-lg transition-colors">Submit RSVP</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Photo Gallery Section -->
+        <section id="gallery" class="mb-16 text-center">
+            <h2 class="text-4xl font-bold mb-8 text-gray-800">Gallery</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <img src="https://placehold.co/400x400/fecdd3/be123c?text=J%26M" alt="Couple Photo 1" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+                <img src="https://placehold.co/400x400/fbcfe8/86198f?text=J%26M" alt="Couple Photo 2" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+                <img src="https://placehold.co/400x400/f5d0fe/701a75?text=J%26M" alt="Couple Photo 3" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+                <img src="https://placehold.co/400x400/ddd6fe/5b21b6?text=J%26M" alt="Couple Photo 4" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+            </div>
+        </section>
+
+        <!-- Gifts Section -->
+        <section id="gifts" class="mb-16 text-center">
+            <h2 class="text-4xl font-bold mb-8 text-gray-800">Gifts</h2>
+            <div class="max-w-2xl mx-auto text-gray-600">
+                <p class="mb-4">Your presence at our wedding is the greatest gift of all. However, if you wish to honor us with a gift, we have registered at the following stores. A wishing well will also be available at the reception.</p>
+                <div class="flex justify-center space-x-8 mt-6">
+                    <a href="#" class="text-rose-500 hover:underline font-semibold">Registry Store 1</a>
+                    <a href="#" class="text-rose-500 hover:underline font-semibold">Registry Store 2</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guest List Display Section (For the couple) -->
+        <section id="guest-list-admin" class="bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Guest List & RSVPs</h2>
+            <p class="text-center text-gray-500 mb-6">This section is for the hosts to view responses in real-time.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-6">
+                <div class="bg-green-100 p-4 rounded-lg">
+                    <p class="text-3xl font-bold text-green-700" id="attendingCount">0</p>
+                    <p class="text-green-600">Attending</p>
+                </div>
+                <div class="bg-red-100 p-4 rounded-lg">
+                    <p class="text-3xl font-bold text-red-700" id="notAttendingCount">0</p>
+                    <p class="text-red-600">Not Attending</p>
+                </div>
+                <div class="bg-blue-100 p-4 rounded-lg">
+                    <p class="text-3xl font-bold text-blue-700" id="totalRsvps">0</p>
+                    <p class="text-blue-600">Total Responses</p>
+                </div>
+            </div>
+            <ul id="rsvpList" class="space-y-4">
+                <!-- RSVPs will be dynamically inserted here -->
+                <li class="text-center text-gray-500">Loading guest list...</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <h3 class="text-3xl font-bold mb-2">Karen & Raymond</h3>
+            <p>Thank you for being a part of our special day!</p>
+            <p class="mt-4 text-gray-400">#JessAndMikeGetHitched</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
