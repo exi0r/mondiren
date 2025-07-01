@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Karen & Raymond's Wedding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background-color: #fffaf3;
+      color: #333;
+    }
+    header {
+      background-image: url('https://exi0r.github.io/wedding/image/background.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
+    header h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 64px;
+      margin-bottom: 10px;
+    }
+    header p {
+      font-size: 24px;
+    }
+    section {
+      padding: 60px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+    }
+    .gallery img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+    .map {
+      width: 100%;
+      height: 450px;
+      border-radius: 12px;
+      border: none;
+    }
+    .rsvp {
+      text-align: center;
+    }
+    .rsvp img {
+      width: 200px;
+      margin: 20px auto;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      background-color: #fef4e8;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Karen & Raymond</h1>
+    <p>We're Getting Married!<br>April 19, 2026</p>
+  </header>
+
+  <section>
+    <h2 style="text-align:center; font-family:'Great Vibes', cursive; font-size: 36px;">Our Wedding Gallery</h2>
+    <div class="gallery">
+      <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" alt="Wedding Photo 1">
+      <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" alt="Wedding Photo 2">
+      <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" alt="Wedding Photo 3">
+      <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" alt="Wedding Photo 4">
+      <img src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" alt="Wedding Photo 5">
+      <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" alt="Wedding Photo 6">
+    </div>
+  </section>
+
+  <section>
+    <h2 style="text-align:center; font-family:'Great Vibes', cursive; font-size: 36px;">Our Venue</h2>
+    <p style="text-align:center; font-size:18px;">The Emerald Events Place, Cabrera Rd, Antipolo City, 1870 Rizal</p>
+    <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3861.5174099227397!2d121.1626355749233!3d14.569567685913066!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c7fb8fce5735%3A0xc84901512d88bd1e!2sThe%20Emerald%20Events%20Place!5e0!3m2!1sen!2sph!4v1751355343922!5m2!1sen!2sph" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </section>
+
+  <section class="rsvp">
+    <h2 style="font-family:'Great Vibes', cursive; font-size: 36px;">RSVP</h2>
+    <p style="font-size:18px;">We would love to celebrate with you! Kindly RSVP by clicking the button below or scan the QR code.</p>
+    <a href="https://forms.office.com/r/wZx0NmdLnQ" target="_blank">
+      <button style="background-color:#ffce76; color:#333; border:none; padding:15px 30px; border-radius:8px; font-size:16px; cursor:pointer;">RSVP Now</button>
+    </a>
+    <div>
+      <img src="https://exi0r.github.io/wedding/image/QRcode.png" alt="RSVP QR Code">
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Karen & Raymond | Designed with love</p>
+  </footer>
+</body>
+</html>
