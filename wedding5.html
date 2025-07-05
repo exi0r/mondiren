@@ -7,12 +7,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Roboto', sans-serif;
       background: #fffdf6;
       color: #333;
+      scroll-behavior: smooth;
     }
     header {
       background-image: url('https://exi0r.github.io/wedding/image/background.jpg');
@@ -25,32 +30,58 @@
       justify-content: center;
       text-align: center;
       color: white;
+      position: relative;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.3);
+      z-index: 0;
+    }
+    header h1, header p {
+      position: relative;
+      z-index: 1;
     }
     header h1 {
       font-family: 'Playfair Display', serif;
       font-size: 4rem;
       margin: 0;
+      animation: fadeInDown 2s;
     }
     header p {
       font-size: 1.5rem;
       margin: 10px 0;
+      animation: fadeInUp 2s;
     }
     section {
       padding: 60px 20px;
       max-width: 1000px;
       margin: auto;
+      animation: fadeIn 2s;
     }
     .section-title {
       font-family: 'Playfair Display', serif;
       font-size: 2.5rem;
       margin-bottom: 20px;
       text-align: center;
+      position: relative;
+    }
+    .section-title::after {
+      content: '';
+      width: 60px;
+      height: 4px;
+      background: #f4a261;
+      display: block;
+      margin: 10px auto 0;
+      border-radius: 2px;
     }
     .venue {
       background: #fdfaf1;
       border-radius: 10px;
       padding: 30px;
       text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
     .venue iframe {
       width: 100%;
@@ -67,6 +98,10 @@
     .gallery img {
       width: 100%;
       border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+    .gallery img:hover {
+      transform: scale(1.03);
     }
     .rsvp {
       text-align: center;
@@ -80,6 +115,10 @@
       text-decoration: none;
       font-size: 1.2rem;
       border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+    .rsvp a:hover {
+      background-color: #e76f51;
     }
     .rsvp img {
       margin-top: 20px;
@@ -96,14 +135,14 @@
 </head>
 <body>
   <header>
-    <h1>Raymond & Karen</h1>
-    <p>We're Getting Married!</p>
-    <p>April 19, 2026</p>
+    <h1 class="animate__animated animate__fadeInDown">Raymond & Karen</h1>
+    <p class="animate__animated animate__fadeInUp">We're Getting Married!</p>
+    <p class="animate__animated animate__fadeInUp">April 19, 2026</p>
   </header>
 
   <section>
     <div class="section-title">Our Venue</div>
-    <div class="venue">
+    <div class="venue animate__animated animate__fadeInUp">
       <p><strong>The Emerald Events Place</strong><br>H598+R3G, Cabrera Rd, Antipolo City, 1870 Rizal</p>
       <iframe src="https://www.google.com/maps?q=H598+R3G,+Cabrera+Rd,+Antipolo+City,+1870+Rizal&output=embed"></iframe>
     </div>
@@ -112,21 +151,21 @@
   <section>
     <div class="section-title">Gallery</div>
     <div class="gallery">
-      <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" alt="Photo 1" />
-      <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" alt="Photo 2" />
-      <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" alt="Photo 3" />
-      <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" alt="Photo 4" />
-      <img src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" alt="Photo 5" />
-      <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" alt="Photo 6" />
+      <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" alt="Photo 1" class="animate__animated animate__zoomIn" />
+      <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" alt="Photo 2" class="animate__animated animate__zoomIn" />
+      <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" alt="Photo 3" class="animate__animated animate__zoomIn" />
+      <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" alt="Photo 4" class="animate__animated animate__zoomIn" />
+      <img src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" alt="Photo 5" class="animate__animated animate__zoomIn" />
+      <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" alt="Photo 6" class="animate__animated animate__zoomIn" />
     </div>
   </section>
 
   <section class="rsvp">
     <div class="section-title">RSVP</div>
-    <p>Let us know if you can join our celebration!</p>
-    <a href="https://forms.office.com/r/wZx0NmdLnQ" target="_blank">Confirm Attendance</a>
+    <p class="animate__animated animate__fadeIn">Let us know if you can join our celebration!</p>
+    <a href="https://forms.office.com/r/wZx0NmdLnQ" target="_blank" class="animate__animated animate__bounceIn">Confirm Attendance</a>
     <br>
-    <img src="https://exi0r.github.io/wedding/image/QRcode.png" alt="RSVP QR Code">
+    <img src="https://exi0r.github.io/wedding/image/QRcode.png" alt="RSVP QR Code" class="animate__animated animate__fadeIn" />
   </section>
 
   <footer>
