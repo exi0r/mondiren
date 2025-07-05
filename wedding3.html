@@ -9,9 +9,13 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
 
-  <!-- Global Styles -->
+  <!-- AOS Animation Library -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+    rel="stylesheet"
+  />
+
   <style>
-    /* Root color palette — soft citrus garden theme */
     :root {
       --leaf-green: #a3c293;
       --citrus-yellow: #f7e6a3;
@@ -21,93 +25,101 @@
       --font-sans: 'Roboto', sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-sans); color: var(--charcoal); line-height: 1.6; background-color: var(--soft-white); }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-sans); color: var(--charcoal); background: var(--soft-white); }
     a { color: var(--leaf-green); text-decoration: none; }
     img { max-width: 100%; display: block; }
 
-    /* Navbar */
-    nav { position: fixed; width: 100%; background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); z-index: 100; }
-    .nav-container { max-width: 1100px; margin: auto; display: flex; justify-content: space-between; padding: 1rem; align-items: center; }
+    nav {
+      position: fixed; top: 0; width: 100%; background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(8px); z-index: 10;
+      transition: background .3s ease;
+    }
+    nav.scrolled { background: var(--soft-white); }
+
+    .nav-container {
+      max-width: 1100px; margin: auto;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem;
+    }
     .nav-logo { font-family: var(--font-script); font-size: 1.8rem; }
     .nav-links { list-style: none; display: flex; gap: 1.5rem; }
-    .nav-links li a:hover { color: var(--citrus-yellow); }
+    .nav-links a:hover { color: var(--citrus-yellow); }
 
-    /* Hero Section */
     .hero {
-      height: 100vh;
-      background: url('https://exi0r.github.io/wedding/image/background.jpg') center/cover no-repeat;
-      display: flex; align-items: center; justify-content: center;
-      position: relative; text-align: center; color: var(--soft-white);
+      height: 100vh; background: url('https://exi0r.github.io/wedding/image/background.jpg') center/cover no-repeat;
+      display: flex; align-items: center; justify-content: center; text-align: center; position: relative;
     }
-    .hero::after {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.3);
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(0,0,0,0.4);
     }
-    .hero-content { position: relative; z-index: 1; }
-    .hero-content h1 { font-family: var(--font-script); font-size: 4rem; margin-bottom: 0.5rem; }
+    .hero-content {
+      position: relative; color: var(--soft-white);
+    }
+    .hero-content h1 {
+      font-family: var(--font-script); font-size: 4rem; margin-bottom: .5rem;
+    }
     .hero-content p { font-size: 1.2rem; }
 
-    /* Sections */
-    section { padding: 4rem 1rem; max-width: 1100px; margin: auto; }
-    h2 { font-family: var(--font-script); font-size: 2.5rem; color: var(--leaf-green); margin-bottom: 1rem; text-align: center; }
+    section { padding: 4rem 2rem; max-width: 1100px; margin: auto; }
+    h2 {
+      font-family: var(--font-script);
+      font-size: 2.5rem; color: var(--leaf-green);
+      text-align: center; margin-bottom: 2rem;
+    }
 
-    /* About Us */
-    .about { display: flex; flex-wrap: wrap; align-items: center; gap: 2rem; }
-    .about-text { flex: 1 1 300px; }
-    .about-img { flex: 1 1 300px; }
+    .about {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 2rem;
+    }
+    .about-img, .about-text { flex: 1 1 300px; }
 
-    /* Timeline */
     .timeline { position: relative; }
     .timeline::before {
-      content: '';
-      position: absolute; left: 50%; transform: translateX(-50%);
+      content: ''; position: absolute; left: 50%; transform: translateX(-50%);
       width: 4px; height: 100%; background: var(--leaf-green);
     }
     .timeline-item {
-      width: 50%; padding: 1rem 2rem;
-      position: relative;
+      width: 50%; padding: 1rem 2rem; position: relative;
     }
     .timeline-item:nth-child(odd) { left: 0; text-align: right; }
     .timeline-item:nth-child(even) { left: 50%; }
     .timeline-item::before {
-      content: '';
-      position: absolute;
-      top: 1.2rem;
-      width: 1rem; height: 1rem;
-      background: var(--citrus-yellow);
-      border-radius: 50%;
-      box-shadow: 0 0 0 4px var(--leaf-green);
+      content: ''; position: absolute; top: 1.2rem;
+      width: 1rem; height: 1rem; background: var(--citrus-yellow);
+      border-radius: 50%; box-shadow: 0 0 0 4px var(--leaf-green);
     }
     .timeline-item:nth-child(odd)::before { right: -0.6rem; }
     .timeline-item:nth-child(even)::before { left: -0.6rem; }
 
-    /* Venue Map */
     .map-responsive { overflow: hidden; padding-bottom: 56.25%; position: relative; height: 0; }
-    .map-responsive iframe { left: 0; top: 0; height: 100%; width: 100%; position: absolute; border: 0; }
+    .map-responsive iframe { position: absolute; top:0; left:0; width:100%; height:100%; border:0; }
 
-    /* Gallery */
-    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1rem; }
-
-    /* RSVP */
-    .rsvp-container { text-align: center; }
-    .rsvp-container a.btn {
-      background: var(--leaf-green);
-      color: var(--soft-white);
-      padding: 0.75rem 1.5rem;
-      border-radius: 50px;
-      display: inline-block;
-      margin-top: 1rem;
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap: 1rem;
     }
-    .qr-code { max-width: 150px; margin-top: 1rem; }
 
-    /* Footer */
-    footer { background: var(--citrus-yellow); text-align: center; padding: 2rem 1rem; font-size: 0.9rem; }
+    .rsvp-container { text-align: center; }
+    .rsvp-container .btn {
+      background: var(--leaf-green); color: var(--soft-white);
+      padding: .75rem 1.5rem; border-radius: 50px; display:inline-block;
+      transition: background .3s;
+    }
+    .rsvp-container .btn:hover { background: var(--citrus-yellow); color: var(--charcoal); }
+    .qr-code { max-width: 140px; margin-top: 1rem; }
+
+    footer {
+      background: var(--citrus-yellow); text-align: center;
+      padding: 2rem 1rem; font-size: .9rem;
+    }
   </style>
 </head>
 <body>
+
   <!-- NAVBAR -->
-  <nav>
+  <nav id="navbar" data-aos="fade-down">
     <div class="nav-container">
       <div class="nav-logo">Raymond &amp; Karen</div>
       <ul class="nav-links">
@@ -122,55 +134,56 @@
 
   <!-- HERO -->
   <section id="home" class="hero">
-    <div class="hero-content">
+    <div class="hero-content" data-aos="zoom-in" data-aos-duration="1200">
       <h1>We’re Getting Married</h1>
-      <p>Raymond &amp; Karen<br />April 19, 2026</p>
+      <p>Raymond &amp; Karen<br>April 19, 2026</p>
     </div>
   </section>
 
   <!-- OUR STORY -->
   <section id="story">
-    <h2>Our Story</h2>
+    <h2 data-aos="fade-up">Our Story</h2>
     <div class="about">
-      <div class="about-img">
-        <!-- Primary couple photo -->
-        <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" alt="Raymond and Karen" />
+      <div class="about-img" data-aos="fade-right" data-aos-delay="200">
+        <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" alt="Raymond and Karen">
       </div>
-      <div class="about-text">
-        <p>It all began on a sunny afternoon at a local café where fate introduced us. From that moment, laughter and adventure became our daily pursuit. Over shared dreams and whispered secrets, our bond flourished into a love that’s both gentle and strong.</p>
-        <p>Join us as we take the next step in our journey beneath blooming garden boughs and citrus-scented breezes.</p>
+      <div class="about-text" data-aos="fade-left" data-aos-delay="200">
+        <p>It all began on a sunny afternoon at a local café where fate introduced us. From that moment, laughter and adventure became our daily pursuit.</p>
+
+        <p>Over shared dreams and whispered secrets, our bond blossomed. Join us beneath blooming garden boughs and citrus-scented breezes.</p>
       </div>
     </div>
   </section>
 
-  <!-- TIMELINE -->
+  <!-- EVENT DETAILS -->
   <section id="details">
-    <h2>Event Details</h2>
+    <h2 data-aos="fade-up">Event Details</h2>
     <div class="timeline">
-      <div class="timeline-item">
+      <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
         <h3>Ceremony</h3>
-        <p>April 19, 2026<br />3:00 PM</p>
+        <p>April 19, 2026<br>3:00 PM</p>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
         <h3>Cocktail Hour</h3>
-        <p>April 19, 2026<br />4:00 PM</p>
+        <p>April 19, 2026<br>4:00 PM</p>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" data-aos="fade-up" data-aos-delay="300">
         <h3>Reception</h3>
-        <p>April 19, 2026<br />5:00 PM</p>
+        <p>April 19, 2026<br>5:00 PM</p>
       </div>
     </div>
   </section>
 
   <!-- VENUE -->
-  <section>
+  <section data-aos="fade-up">
     <h2>Venue</h2>
+
     <p style="text-align:center; margin-bottom:1.5rem;">
-      The Emerald Events Place<br />
+      The Emerald Events Place<br>
       Cabrera Rd, Antipolo City, 1870 Rizal
     </p>
-    <div class="map-responsive">
-      <!-- Google Maps embed for H598+R3G -->
+
+    <div class="map-responsive" data-aos="zoom-in" data-aos-delay="200">
       <iframe
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3875.1234567890123!2d121.1234567!3d14.1234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cc123456789%3A0xabcdef1234567890!2sThe%20Emerald%20Events%20Place!5e0!3m2!1sen!2sph!4v1671234567890"
         allowfullscreen=""
@@ -181,246 +194,46 @@
 
   <!-- GALLERY -->
   <section id="gallery">
-    <h2>Gallery</h2>
+    <h2 data-aos="fade-up">Gallery</h2>
     <div class="gallery">
-      <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" alt="Photo 1">
-      <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" alt="Photo 2">
-      <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" alt="Photo 3">
-      <img src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" alt="Photo 4">
-      <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" alt="Photo 5">
+      <img data-aos="fade-up" data-aos-delay="100" src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" alt="">
+      <img data-aos="fade-up" data-aos-delay="200" src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" alt="">
+      <img data-aos="fade-up" data-aos-delay="300" src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" alt="">
+      <img data-aos="fade-up" data-aos-delay="400" src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" alt="">
+      <img data-aos="fade-up" data-aos-delay="500" src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" alt="">
     </div>
   </section>
 
   <!-- RSVP -->
   <section id="rsvp">
-    <h2>RSVP</h2>
-    <div class="rsvp-container">
+    <h2 data-aos="fade-up">RSVP</h2>
+    <div class="rsvp-container" data-aos="fade-up" data-aos-delay="200">
       <p>Please let us know if you can join our special day.</p>
-      <a class="btn" href="https://forms.office.com/r/wZx0NmdLnQ" target="_blank">Fill Out RSVP Form</a>
+      <a class="btn" href="https://forms.office.com/r/wZx0NmdLnQ" target="_blank">
+        Fill Out RSVP Form
+      </a>
       <div>
-        <!-- QR Code for mobile guests -->
-        <img class="qr-code" src="https://exi0r.github.io/wedding/image/QRcode.png" alt="RSVP QR Code" />
+        <img class="qr-code" src="https://exi0r.github.io/wedding/image/QRcode.png" alt="RSVP QR Code">
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer>
+  <footer data-aos="fade-up">
     <p>We can't wait to celebrate with you! Thank you for being part of our journey.</p>
     <p>&copy; 2026 Raymond &amp; Karen</p>
   </footer>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Raymond &amp; Karen | April 19, 2026</title>
-  <link rel="icon" href="https://exi0r.github.io/wedding/image/background.jpg" />
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+  <!-- AOS Script & Nav‐Scroll Toggle -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true, easing: 'ease-in-out' });
 
-  <!-- Global Styles -->
-  <style>
-    /* Root color palette — soft citrus garden theme */
-    :root {
-      --leaf-green: #a3c293;
-      --citrus-yellow: #f7e6a3;
-      --soft-white: #fcfcfc;
-      --charcoal: #333;
-      --font-script: 'Great Vibes', cursive;
-      --font-sans: 'Roboto', sans-serif;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-sans); color: var(--charcoal); line-height: 1.6; background-color: var(--soft-white); }
-    a { color: var(--leaf-green); text-decoration: none; }
-    img { max-width: 100%; display: block; }
-
-    /* Navbar */
-    nav { position: fixed; width: 100%; background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); z-index: 100; }
-    .nav-container { max-width: 1100px; margin: auto; display: flex; justify-content: space-between; padding: 1rem; align-items: center; }
-    .nav-logo { font-family: var(--font-script); font-size: 1.8rem; }
-    .nav-links { list-style: none; display: flex; gap: 1.5rem; }
-    .nav-links li a:hover { color: var(--citrus-yellow); }
-
-    /* Hero Section */
-    .hero {
-      height: 100vh;
-      background: url('https://exi0r.github.io/wedding/image/background.jpg') center/cover no-repeat;
-      display: flex; align-items: center; justify-content: center;
-      position: relative; text-align: center; color: var(--soft-white);
-    }
-    .hero::after {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.3);
-    }
-    .hero-content { position: relative; z-index: 1; }
-    .hero-content h1 { font-family: var(--font-script); font-size: 4rem; margin-bottom: 0.5rem; }
-    .hero-content p { font-size: 1.2rem; }
-
-    /* Sections */
-    section { padding: 4rem 1rem; max-width: 1100px; margin: auto; }
-    h2 { font-family: var(--font-script); font-size: 2.5rem; color: var(--leaf-green); margin-bottom: 1rem; text-align: center; }
-
-    /* About Us */
-    .about { display: flex; flex-wrap: wrap; align-items: center; gap: 2rem; }
-    .about-text { flex: 1 1 300px; }
-    .about-img { flex: 1 1 300px; }
-
-    /* Timeline */
-    .timeline { position: relative; }
-    .timeline::before {
-      content: '';
-      position: absolute; left: 50%; transform: translateX(-50%);
-      width: 4px; height: 100%; background: var(--leaf-green);
-    }
-    .timeline-item {
-      width: 50%; padding: 1rem 2rem;
-      position: relative;
-    }
-    .timeline-item:nth-child(odd) { left: 0; text-align: right; }
-    .timeline-item:nth-child(even) { left: 50%; }
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      top: 1.2rem;
-      width: 1rem; height: 1rem;
-      background: var(--citrus-yellow);
-      border-radius: 50%;
-      box-shadow: 0 0 0 4px var(--leaf-green);
-    }
-    .timeline-item:nth-child(odd)::before { right: -0.6rem; }
-    .timeline-item:nth-child(even)::before { left: -0.6rem; }
-
-    /* Venue Map */
-    .map-responsive { overflow: hidden; padding-bottom: 56.25%; position: relative; height: 0; }
-    .map-responsive iframe { left: 0; top: 0; height: 100%; width: 100%; position: absolute; border: 0; }
-
-    /* Gallery */
-    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1rem; }
-
-    /* RSVP */
-    .rsvp-container { text-align: center; }
-    .rsvp-container a.btn {
-      background: var(--leaf-green);
-      color: var(--soft-white);
-      padding: 0.75rem 1.5rem;
-      border-radius: 50px;
-      display: inline-block;
-      margin-top: 1rem;
-    }
-    .qr-code { max-width: 150px; margin-top: 1rem; }
-
-    /* Footer */
-    footer { background: var(--citrus-yellow); text-align: center; padding: 2rem 1rem; font-size: 0.9rem; }
-  </style>
-</head>
-<body>
-  <!-- NAVBAR -->
-  <nav>
-    <div class="nav-container">
-      <div class="nav-logo">Raymond &amp; Karen</div>
-      <ul class="nav-links">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#story">Our Story</a></li>
-        <li><a href="#details">Details</a></li>
-        <li><a href="#gallery">Gallery</a></li>
-        <li><a href="#rsvp">RSVP</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <section id="home" class="hero">
-    <div class="hero-content">
-      <h1>We’re Getting Married</h1>
-      <p>Raymond &amp; Karen<br />April 19, 2026</p>
-    </div>
-  </section>
-
-  <!-- OUR STORY -->
-  <section id="story">
-    <h2>Our Story</h2>
-    <div class="about">
-      <div class="about-img">
-        <!-- Primary couple photo -->
-        <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" alt="Raymond and Karen" />
-      </div>
-      <div class="about-text">
-        <p>It all began on a sunny afternoon at a local café where fate introduced us. From that moment, laughter and adventure became our daily pursuit. Over shared dreams and whispered secrets, our bond flourished into a love that’s both gentle and strong.</p>
-        <p>Join us as we take the next step in our journey beneath blooming garden boughs and citrus-scented breezes.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- TIMELINE -->
-  <section id="details">
-    <h2>Event Details</h2>
-    <div class="timeline">
-      <div class="timeline-item">
-        <h3>Ceremony</h3>
-        <p>April 19, 2026<br />3:00 PM</p>
-      </div>
-      <div class="timeline-item">
-        <h3>Cocktail Hour</h3>
-        <p>April 19, 2026<br />4:00 PM</p>
-      </div>
-      <div class="timeline-item">
-        <h3>Reception</h3>
-        <p>April 19, 2026<br />5:00 PM</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- VENUE -->
-  <section>
-    <h2>Venue</h2>
-    <p style="text-align:center; margin-bottom:1.5rem;">
-      The Emerald Events Place<br />
-      Cabrera Rd, Antipolo City, 1870 Rizal
-    </p>
-    <div class="map-responsive">
-      <!-- Google Maps embed for H598+R3G -->
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3875.1234567890123!2d121.1234567!3d14.1234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cc123456789%3A0xabcdef1234567890!2sThe%20Emerald%20Events%20Place!5e0!3m2!1sen!2sph!4v1671234567890"
-        allowfullscreen=""
-        loading="lazy"
-      ></iframe>
-    </div>
-  </section>
-
-  <!-- GALLERY -->
-  <section id="gallery">
-    <h2>Gallery</h2>
-    <div class="gallery">
-      <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" alt="Photo 1">
-      <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" alt="Photo 2">
-      <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" alt="Photo 3">
-      <img src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" alt="Photo 4">
-      <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" alt="Photo 5">
-    </div>
-  </section>
-
-  <!-- RSVP -->
-  <section id="rsvp">
-    <h2>RSVP</h2>
-    <div class="rsvp-container">
-      <p>Please let us know if you can join our special day.</p>
-      <a class="btn" href="https://forms.office.com/r/wZx0NmdLnQ" target="_blank">Fill Out RSVP Form</a>
-      <div>
-        <!-- QR Code for mobile guests -->
-        <img class="qr-code" src="https://exi0r.github.io/wedding/image/QRcode.png" alt="RSVP QR Code" />
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <p>We can't wait to celebrate with you! Thank you for being part of our journey.</p>
-    <p>&copy; 2026 Raymond &amp; Karen</p>
-  </footer>
+    // change navbar bg on scroll
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+  </script>
 </body>
 </html>
