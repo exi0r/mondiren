@@ -64,6 +64,27 @@
         .animate-pulse-widget {
             animation: pulse 2s infinite;
         }
+        /* Masonry Gallery Styles */
+        .gallery-container {
+            column-count: 2;
+            column-gap: 1rem;
+        }
+        @media (min-width: 768px) {
+            .gallery-container {
+                column-count: 3;
+            }
+        }
+        .gallery-item {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+            overflow: hidden; /* Ensures the image stays within the rounded corners during animation */
+        }
+        .gallery-item img {
+            transition: transform 0.8s ease-in-out !important;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -137,8 +158,8 @@
     <section class="py-20 bg-citrus-light">
         <div class="container mx-auto text-center px-6">
             <h2 class="section-title" data-aos="fade-up">Counting Down</h2>
-            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">UNTIL OUR BIG DAY</p>
-            <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-3xl mx-auto text-citrus-green" data-aos="fade-up" data-aos-delay="200">
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">UNTIL OUR BIG DAY</p>
+            <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-3xl mx-auto text-citrus-green" data-aos="fade-up" data-aos-delay="400">
                 <div class="bg-white p-6 rounded-lg shadow-lg">
                     <div id="days" class="text-4xl md:text-6xl font-bold">0</div>
                     <div class="text-sm uppercase tracking-widest">Days</div>
@@ -164,7 +185,7 @@
         <div class="container mx-auto px-6">
             <div class="text-center">
                 <h2 class="section-title" data-aos="fade-up">Our Story</h2>
-                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">A JOURNEY OF LOVE</p>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">A JOURNEY OF LOVE</p>
             </div>
             <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12 max-w-5xl mx-auto">
                 <div class="md:w-1/2" data-aos="fade-right">
@@ -186,9 +207,9 @@
     <section id="event" class="py-20 bg-citrus-light">
         <div class="container mx-auto px-6 text-center">
             <h2 class="section-title" data-aos="fade-up">The Wedding</h2>
-            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">JOIN US TO CELEBRATE</p>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">JOIN US TO CELEBRATE</p>
             <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                <div class="text-center" data-aos="fade-up" data-aos-delay="300">
                     <div class="mb-4">
                         <img src="https://img.icons8.com/ios/100/81A26B/wedding-rings.png" alt="Ceremony Icon" class="mx-auto"/>
                     </div>
@@ -198,7 +219,7 @@
                     <p class="text-lg mt-4 font-semibold">The Emerald Events Place</p>
                     <p class="text-gray-500">Cabrera Rd, Antipolo City, 1870 Rizal</p>
                 </div>
-                <div class="h-80 md:h-full rounded-lg shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                <div class="h-80 md:h-full rounded-lg shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="400">
                      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3860.844729117621!2d121.1627586758019!3d14.60790248587829!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b8e855555555%3A0x4c8e75a9d5926c04!2sThe%20Emerald%2s%20Events%20Place!5e0!3m2!1sen!2sph!4v1720172658197!5m2!1sen!2sph" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
@@ -214,8 +235,8 @@
     <section class="py-20">
         <div class="container mx-auto px-6 text-center">
             <h2 class="section-title" data-aos="fade-up">Attire</h2>
-            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">SOFT CITRUS GARDEN THEME</p>
-            <div class="max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">SOFT CITRUS GARDEN THEME</p>
+            <div class="max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="300">
                 <p class="text-lg leading-relaxed mb-8">We kindly request our guests to dress in formal attire. To complement our soft citrus garden theme, we suggest shades of peach, lemon, sage green, lavender, and other light pastel colors.</p>
                 <div class="flex justify-center space-x-4">
                     <div class="w-16 h-16 rounded-full bg-citrus-peach border-2 border-white shadow-md"></div>
@@ -233,26 +254,26 @@
         <div class="container mx-auto px-6">
             <div class="text-center">
                 <h2 class="section-title" data-aos="fade-up">Gallery</h2>
-                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">CHERISHED MOMENTS</p>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">CHERISHED MOMENTS</p>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div data-aos="zoom-in">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" alt="Gallery Image 1" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+            <div class="gallery-container">
+                <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="100">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" alt="Gallery Image 1" class="rounded-lg w-full h-auto object-cover">
                 </div>
-                <div data-aos="zoom-in" data-aos-delay="100">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" alt="Gallery Image 2" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="200">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" alt="Gallery Image 2" class="rounded-lg w-full h-auto object-cover">
                 </div>
-                <div data-aos="zoom-in" data-aos-delay="200">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" alt="Gallery Image 3" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="300">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" alt="Gallery Image 3" class="rounded-lg w-full h-auto object-cover">
                 </div>
-                 <div data-aos="zoom-in" class="col-span-2 md:col-span-1">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" alt="Gallery Image 4" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                 <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="100">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" alt="Gallery Image 4" class="rounded-lg w-full h-auto object-cover">
                 </div>
-                <div data-aos="zoom-in" data-aos-delay="100">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" alt="Gallery Image 5" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="200">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" alt="Gallery Image 5" class="rounded-lg w-full h-auto object-cover">
                 </div>
-                 <div data-aos="zoom-in" data-aos-delay="200">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" alt="Gallery Image 6" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                 <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="300">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" alt="Gallery Image 6" class="rounded-lg w-full h-auto object-cover">
                 </div>
             </div>
         </div>
@@ -263,8 +284,8 @@
         <div class="absolute inset-0 bg-black/50"></div>
         <div class="relative container mx-auto px-6 text-center text-white">
             <h2 class="section-title text-white" data-aos="fade-up">Will You Be There?</h2>
-            <p class="section-subtitle !text-gray-300" data-aos="fade-up" data-aos-delay="100">PLEASE RSVP BY [DATE]</p>
-            <div class="max-w-2xl mx-auto bg-white/10 backdrop-blur-md p-8 rounded-lg" data-aos="fade-up" data-aos-delay="200">
+            <p class="section-subtitle !text-gray-300" data-aos="fade-up" data-aos-delay="200">PLEASE RSVP BY MARCH 19, 2026</p>
+            <div class="max-w-2xl mx-auto bg-white/10 backdrop-blur-md p-8 rounded-lg" data-aos="fade-up" data-aos-delay="300">
                 <p class="text-lg mb-6">Your presence at our wedding is the greatest gift of all. Please let us know if you can make it. You can RSVP by clicking the button below or by scanning the QR code.</p>
                 <a href="https://forms.office.com/r/wZx0NmdLnQ" target="_blank" class="btn-primary mb-6">
                     RSVP Now
@@ -289,11 +310,12 @@
     <!-- AOS (Animate on Scroll) Script -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Initialize AOS
+        // Initialize AOS with slower animation
         AOS.init({
-            duration: 800,
+            duration: 1800, // Slower animation (was 1200)
             once: true,
-            offset: 50,
+            offset: 100, // Trigger animation a bit sooner
+            easing: 'ease-in-out-cubic', // A more graceful easing function
         });
 
         // Countdown Timer Logic
