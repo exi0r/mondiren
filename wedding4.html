@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raymond & Karen | We're Getting Married!</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- AOS (Animate on Scroll) Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* Custom styles for the theme */
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #FEFBF6; /* Soft cream background */
+            color: #5D4037; /* Earthy brown text */
+        }
+        .font-heading {
+            font-family: 'Great Vibes', cursive;
+        }
+        .bg-citrus-light {
+            background-color: #FFF7E1; /* Light yellow */
+        }
+        .bg-citrus-peach {
+            background-color: #FFDAB9; /* Peach */
+        }
+        .text-citrus-green {
+            color: #81A26B; /* Sage green */
+        }
+        .btn-primary {
+            @apply inline-block px-8 py-3 text-lg font-semibold text-white bg-citrus-green rounded-full shadow-md hover:bg-opacity-90 transition-transform transform hover:scale-105;
+        }
+        .btn-secondary {
+            @apply inline-block px-8 py-3 text-lg font-semibold text-citrus-green bg-transparent border-2 border-citrus-green rounded-full shadow-md hover:bg-citrus-green hover:text-white transition-colors;
+        }
+        .section-title {
+            @apply text-5xl md:text-7xl font-heading text-citrus-green mb-4;
+        }
+        .section-subtitle {
+            @apply text-lg text-gray-500 uppercase tracking-widest mb-12;
+        }
+        .nav-link {
+            @apply text-gray-600 hover:text-citrus-green transition-colors duration-300;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Music Modal -->
+    <div id="music-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-lg shadow-2xl p-8 text-center max-w-sm mx-auto" data-aos="zoom-in">
+            <h3 class="font-heading text-4xl text-citrus-green mb-4">Welcome!</h3>
+            <p class="text-gray-600 mb-8">This site contains background music. Would you like to play it for the best experience?</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button id="play-music-btn" class="btn-primary w-full sm:w-auto">Play Music</button>
+                <button id="no-music-btn" class="btn-secondary w-full sm:w-auto">Continue in Silence</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Music Toggle Button -->
+    <button id="music-toggle-btn" class="hidden fixed bottom-5 right-5 z-50 w-12 h-12 bg-citrus-green text-white rounded-full shadow-lg flex items-center justify-center">
+        <svg id="music-on-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.88 5.88a15 15 0 0118.382 18.382M12 12h.01" />
+        </svg>
+        <svg id="music-off-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.108 12 5v14c0 .892-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+        </svg>
+    </button>
+    
+    <!-- Background Music -->
+    <audio id="bg-music" loop src="https://exi0r.github.io/wedding/music/DilawInstrumental.mp3"></audio>
+
+    <!-- Header & Navigation -->
+    <header id="home" class="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-sm shadow-sm transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="text-2xl font-heading text-citrus-green">R & K</a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#story" class="nav-link">Our Story</a>
+                <a href="#event" class="nav-link">Event Details</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#rsvp" class="nav-link">RSVP</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-2xl text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white px-6 pb-4">
+            <a href="#story" class="block py-2 nav-link text-center">Our Story</a>
+            <a href="#event" class="block py-2 nav-link text-center">Event Details</a>
+            <a href="#gallery" class="block py-2 nav-link text-center">Gallery</a>
+            <a href="#rsvp" class="block py-2 nav-link text-center">RSVP</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center text-center text-white" 
+             style="background: url('https://exi0r.github.io/wedding/image/background.jpg') no-repeat center center/cover;">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="relative z-10 p-6" data-aos="fade-up">
+            <h1 class="font-heading text-6xl md:text-9xl mb-4">Raymond & Karen</h1>
+            <p class="text-xl md:text-2xl font-light tracking-wider mb-2">WE'RE GETTING MARRIED</p>
+            <p class="text-2xl md:text-3xl font-semibold bg-white/20 backdrop-blur-sm py-2 px-4 rounded-lg inline-block">
+                April 19, 2026
+            </p>
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section class="py-20 bg-citrus-light">
+        <div class="container mx-auto text-center px-6">
+            <h2 class="section-title" data-aos="fade-up">Counting Down</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">UNTIL OUR BIG DAY</p>
+            <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-3xl mx-auto text-citrus-green" data-aos="fade-up" data-aos-delay="200">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div id="days" class="text-4xl md:text-6xl font-bold">0</div>
+                    <div class="text-sm uppercase tracking-widest">Days</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div id="hours" class="text-4xl md:text-6xl font-bold">0</div>
+                    <div class="text-sm uppercase tracking-widest">Hours</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div id="minutes" class="text-4xl md:text-6xl font-bold">0</div>
+                    <div class="text-sm uppercase tracking-widest">Minutes</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div id="seconds" class="text-4xl md:text-6xl font-bold">0</div>
+                    <div class="text-sm uppercase tracking-widest">Seconds</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story Section -->
+    <section id="story" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h2 class="section-title" data-aos="fade-up">Our Story</h2>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">A JOURNEY OF LOVE</p>
+            </div>
+            <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12 max-w-5xl mx-auto">
+                <div class="md:w-1/2" data-aos="fade-right">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" alt="Raymond and Karen" class="rounded-lg shadow-xl w-full h-auto object-cover">
+                </div>
+                <div class="md:w-1/2 text-center md:text-left" data-aos="fade-left">
+                    <p class="text-lg leading-relaxed mb-4">
+                        Our journey began unexpectedly, blossomed into a beautiful friendship, and has now led us to a lifetime of love. We've shared countless laughs, supported each other through challenges, and built a bond that we cherish more than words can say.
+                    </p>
+                    <p class="text-lg leading-relaxed">
+                        We are so excited to start this next chapter together and can't wait to celebrate with all of you, our dearest family and friends, who have been a part of our story from the very beginning.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Details Section -->
+    <section id="event" class="py-20 bg-citrus-light">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="section-title" data-aos="fade-up">The Wedding</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">JOIN US TO CELEBRATE</p>
+            <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="mb-4">
+                        <img src="https://img.icons8.com/ios/100/81A26B/wedding-rings.png" alt="Ceremony Icon" class="mx-auto"/>
+                    </div>
+                    <h3 class="text-3xl font-heading text-citrus-green mb-2">The Ceremony & Reception</h3>
+                    <p class="text-lg">Sunday, April 19, 2026</p>
+                    <p class="text-lg">Time to be announced</p>
+                    <p class="text-lg mt-4 font-semibold">The Emerald Events Place</p>
+                    <p class="text-gray-500">Cabrera Rd, Antipolo City, 1870 Rizal</p>
+                </div>
+                <div class="h-80 md:h-full rounded-lg shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3860.844729117621!2d121.1627586758019!3d14.60790248587829!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b8e855555555%3A0x4c8e75a9d5926c04!2sThe%20Emerald%2s%20Events%20Place!5e0!3m2!1sen!2sph!4v1720172658197!5m2!1sen!2sph" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+             <div class="mt-12" data-aos="fade-up">
+                <a href="https://maps.app.goo.gl/35uBw7dKxP1t18gH8" target="_blank" class="btn-primary">
+                    Open in Google Maps
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Attire Section -->
+    <section class="py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="section-title" data-aos="fade-up">Attire</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">SOFT CITRUS GARDEN THEME</p>
+            <div class="max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                <p class="text-lg leading-relaxed mb-8">We kindly request our guests to dress in formal attire. To complement our soft citrus garden theme, we suggest shades of peach, lemon, sage green, lavender, and other light pastel colors.</p>
+                <div class="flex justify-center space-x-4">
+                    <div class="w-16 h-16 rounded-full bg-citrus-peach border-2 border-white shadow-md"></div>
+                    <div class="w-16 h-16 rounded-full bg-yellow-200 border-2 border-white shadow-md"></div>
+                    <div class="w-16 h-16 rounded-full bg-green-200 border-2 border-white shadow-md"></div>
+                    <div class="w-16 h-16 rounded-full bg-purple-200 border-2 border-white shadow-md"></div>
+                    <div class="w-16 h-16 rounded-full bg-pink-200 border-2 border-white shadow-md"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-citrus-light">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h2 class="section-title" data-aos="fade-up">Gallery</h2>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">CHERISHED MOMENTS</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div data-aos="zoom-in">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" alt="Gallery Image 1" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                </div>
+                <div data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" alt="Gallery Image 2" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                </div>
+                <div data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" alt="Gallery Image 3" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                </div>
+                 <div data-aos="zoom-in" class="col-span-2 md:col-span-1">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" alt="Gallery Image 4" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                </div>
+                <div data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" alt="Gallery Image 5" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                </div>
+                 <div data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" alt="Gallery Image 6" class="rounded-lg shadow-lg w-full h-full object-cover transform hover:scale-105 transition-transform duration-300">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="py-24" style="background: url('https://exi0r.github.io/wedding/image/background.jpg') no-repeat center center/cover; background-attachment: fixed;">
+        <div class="absolute inset-0 bg-black/50"></div>
+        <div class="relative container mx-auto px-6 text-center text-white">
+            <h2 class="section-title text-white" data-aos="fade-up">Will You Be There?</h2>
+            <p class="section-subtitle !text-gray-300" data-aos="fade-up" data-aos-delay="100">PLEASE RSVP BY [DATE]</p>
+            <div class="max-w-2xl mx-auto bg-white/10 backdrop-blur-md p-8 rounded-lg" data-aos="fade-up" data-aos-delay="200">
+                <p class="text-lg mb-6">Your presence at our wedding is the greatest gift of all. Please let us know if you can make it. You can RSVP by clicking the button below or by scanning the QR code.</p>
+                <a href="https://forms.office.com/r/wZx0NmdLnQ" target="_blank" class="btn-primary mb-6">
+                    RSVP Now
+                </a>
+                <div class="mt-6">
+                    <img src="https://exi0r.github.io/wedding/image/QRcode.png" alt="RSVP QR Code" class="mx-auto w-48 h-48 rounded-lg bg-white p-2">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-citrus-light text-center">
+        <div class="container mx-auto px-6">
+            <p class="font-heading text-4xl text-citrus-green mb-2">Thank You</p>
+            <p class="text-gray-600">We can't wait to share our special day with you!</p>
+            <p class="mt-4 text-2xl font-heading text-citrus-green">Raymond & Karen</p>
+        </div>
+    </footer>
+
+
+    <!-- AOS (Animate on Scroll) Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 50,
+        });
+
+        // Countdown Timer Logic
+        const countdown = () => {
+            const countDate = new Date('April 19, 2026 00:00:00').getTime();
+            const now = new Date().getTime();
+            const gap = countDate - now;
+
+            const second = 1000;
+            const minute = second * 60;
+            const hour = minute * 60;
+            const day = hour * 24;
+
+            const textDay = Math.floor(gap / day);
+            const textHour = Math.floor((gap % day) / hour);
+            const textMinute = Math.floor((gap % hour) / minute);
+            const textSecond = Math.floor((gap % minute) / second);
+
+            document.getElementById('days').innerText = textDay > 0 ? textDay : 0;
+            document.getElementById('hours').innerText = textHour > 0 ? textHour : 0;
+            document.getElementById('minutes').innerText = textMinute > 0 ? textMinute : 0;
+            document.getElementById('seconds').innerText = textSecond > 0 ? textSecond : 0;
+        };
+
+        setInterval(countdown, 1000);
+        countdown(); // Initial call
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Music Player Logic
+        const musicModal = document.getElementById('music-modal');
+        const playMusicBtn = document.getElementById('play-music-btn');
+        const noMusicBtn = document.getElementById('no-music-btn');
+        const bgMusic = document.getElementById('bg-music');
+        const musicToggleBtn = document.getElementById('music-toggle-btn');
+        const musicOnIcon = document.getElementById('music-on-icon');
+        const musicOffIcon = document.getElementById('music-off-icon');
+
+        const startMusic = () => {
+            bgMusic.play().catch(error => console.log("Autoplay was prevented.", error));
+            musicModal.classList.add('hidden');
+            musicToggleBtn.classList.remove('hidden');
+            musicOnIcon.classList.remove('hidden');
+            musicOffIcon.classList.add('hidden');
+        };
+
+        const stopMusic = () => {
+            musicModal.classList.add('hidden');
+            musicToggleBtn.classList.remove('hidden');
+            musicOnIcon.classList.add('hidden');
+            musicOffIcon.classList.remove('hidden');
+        };
+
+        playMusicBtn.addEventListener('click', startMusic);
+        noMusicBtn.addEventListener('click', stopMusic);
+
+        musicToggleBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicOnIcon.classList.remove('hidden');
+                musicOffIcon.classList.add('hidden');
+            } else {
+                bgMusic.pause();
+                musicOnIcon.classList.add('hidden');
+                musicOffIcon.classList.remove('hidden');
+            }
+        });
+
+    </script>
+
+</body>
+</html>
