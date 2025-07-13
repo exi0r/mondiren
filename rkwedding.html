@@ -7,7 +7,12 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <!-- GLightbox CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+
+<!-- GLightbox JS -->
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,6 +20,15 @@
     
     <!-- AOS (Animate on Scroll) Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<!-- AOS CSS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<!-- AOS JS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>
 
     <style>
         /* Custom styles for the theme */
@@ -85,6 +99,11 @@
         .gallery-item:hover img {
             transform: scale(1.05);
         }
+
+.glightbox-container .gslide {
+  transition: all 0.5s ease-in-out !important;
+}
+
     </style>
 </head>
 <body class="antialiased">
@@ -157,8 +176,9 @@
     <!-- Countdown Section -->
     <section class="py-20 bg-citrus-light">
         <div class="container mx-auto text-center px-6">
-            <h2 class="section-title" data-aos="fade-up">Counting Down</h2>
-            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">UNTIL OUR BIG DAY</p>
+            <h2 class="text-5xl font-bold text-gray-800" data-aos="fade-up">Counting Down</h2>
+	<div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+            <p class="text-xl uppercase tracking-wide text-gray-500 mb-4" data-aos="fade-up" data-aos-delay="200">UNTIL OUR BIG DAY</p>
             <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-3xl mx-auto text-citrus-green" data-aos="fade-up" data-aos-delay="400">
                 <div class="bg-white p-6 rounded-lg shadow-lg">
                     <div id="days" class="text-4xl md:text-6xl font-bold">0</div>
@@ -184,8 +204,9 @@
     <section id="story" class="py-20">
         <div class="container mx-auto px-6">
             <div class="text-center">
-                <h2 class="section-title" data-aos="fade-up">Our Story</h2>
-                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">A JOURNEY OF LOVE</p>
+                <h2 class="text-5xl font-bold text-gray-800" data-aos="fade-up">Our Story</h2>
+		<div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+                <p class="text-xl uppercase tracking-wide text-gray-500 mb-4" data-aos="fade-up" data-aos-delay="200">A JOURNEY OF LOVE</p>
             </div>
             <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12 max-w-5xl mx-auto">
                 <div class="md:w-1/2" data-aos="fade-right">
@@ -206,8 +227,9 @@
     <!-- Event Details Section -->
     <section id="event" class="py-20 bg-citrus-light">
         <div class="container mx-auto px-6 text-center">
-            <h2 class="section-title" data-aos="fade-up">The Wedding</h2>
-            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">JOIN US TO CELEBRATE</p>
+            <h2 class="text-5xl font-bold text-gray-800" data-aos="fade-up">The Wedding</h2>
+	<div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+            <p class="text-xl uppercase tracking-wide text-gray-500 mb-4" data-aos="fade-up" data-aos-delay="200">JOIN US TO CELEBRATE</p>
             <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
                 <div class="text-center" data-aos="fade-up" data-aos-delay="300">
                     <div class="mb-4">
@@ -215,7 +237,7 @@
                     </div>
                     <h3 class="text-3xl font-heading text-citrus-green mb-2">The Ceremony & Reception</h3>
                     <p class="text-lg">Sunday, April 19, 2026</p>
-                    <p class="text-lg">Time to be announced</p>
+                    <p class="text-lg">4:30 PM</p>
                     <p class="text-lg mt-4 font-semibold">The Emerald Events Place</p>
                     <p class="text-gray-500">Cabrera Rd, Antipolo City, 1870 Rizal</p>
                 </div>
@@ -233,8 +255,9 @@
 <!-- Attire Section -->
 <section class="py-20">
     <div class="container mx-auto px-6 text-center">
-        <h2 class="section-title" data-aos="fade-up">Attire</h2>
-        <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">SOFT CITRUS GARDEN THEME</p>
+        <h2 class="text-5xl font-bold text-gray-800" data-aos="fade-up">Attire</h2>
+        <div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+        <p class="text-xl uppercase tracking-wide text-gray-500 mb-4" data-aos="fade-up" data-aos-delay="200">Soft Citrus Garden Theme</p>
         <div class="max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="300">
             <p class="text-lg leading-relaxed mb-8">
                 We kindly request our guests to dress in formal attire. To complement our soft citrus garden theme, we suggest shades of peach, lemon, sage green, lavender, and other light pastel colors.
@@ -248,30 +271,61 @@
 
     <!-- Gallery Section -->
     <section id="gallery" class="py-20 bg-citrus-light">
-        <div class="container mx-auto px-6">
+        <div class="container mx-auto px-6 text-center">
             <div class="text-center">
-                <h2 class="section-title" data-aos="fade-up">Gallery</h2>
-                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">CHERISHED MOMENTS</p>
+                <h2 class="text-5xl font-bold text-gray-800" data-aos="fade-up">Gallery</h2>
+		<div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+                <p class="text-xl uppercase tracking-wide text-gray-500 mb-4" data-aos="fade-up" data-aos-delay="200">CHERISHED MOMENTS</p>
             </div>
-            <div class="gallery-container">
-                <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="100">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" alt="Gallery Image 1" class="rounded-lg w-full h-auto object-cover">
-                </div>
-                <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="200">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" alt="Gallery Image 2" class="rounded-lg w-full h-auto object-cover">
-                </div>
-                <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="300">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" alt="Gallery Image 3" class="rounded-lg w-full h-auto object-cover">
-                </div>
-                 <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="100">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" alt="Gallery Image 4" class="rounded-lg w-full h-auto object-cover">
-                </div>
-                <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="200">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" alt="Gallery Image 5" class="rounded-lg w-full h-auto object-cover">
-                </div>
-                 <div class="gallery-item rounded-lg shadow-lg" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-delay="300">
-                    <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" alt="Gallery Image 6" class="rounded-lg w-full h-auto object-cover">
-                </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+  <a href="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" class="glightbox"
+     data-gallery="wedding" data-aos="fade-right" data-aos-offset="300"        
+     data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="300">
+    <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg"
+         alt="Gallery Image 1"
+         class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+  </a>
+
+  <a href="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" class="glightbox"
+     data-gallery="wedding" data-aos="fade-up" data-aos-offset="300"
+     data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="400">
+    <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg"
+         alt="Gallery Image 2"
+         class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+  </a>
+
+  <a href="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" class="glightbox"
+     data-gallery="wedding" data-aos="fade-left" data-aos-offset="300"
+     data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="500">
+    <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg"
+         alt="Gallery Image 3"
+         class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+  </a>
+
+  <a href="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" class="glightbox"
+     data-gallery="wedding" data-aos="fade-left" data-aos-offset="300"
+     data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="600">
+    <img src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg"
+         alt="Gallery Image 4"
+         class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+  </a>
+
+  <a href="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" class="glightbox"
+     data-gallery="wedding" data-aos="fade-down" data-aos-offset="300"
+     data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="700">
+    <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg"
+         alt="Gallery Image 5"
+         class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+  </a>
+
+  <a href="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" class="glightbox"
+     data-gallery="wedding" data-aos="fade-right" data-aos-offset="300"
+     data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="800">
+    <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg"
+         alt="Gallery Image 6"
+         class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+  </a>
+</div>
             </div>
         </div>
     </section>
@@ -280,8 +334,9 @@
 <section id="rsvp" class="py-24" style="background: url('https://exi0r.github.io/wedding/image/background_new.png') no-repeat center center/cover; background-attachment: fixed;">
     <div class="absolute inset-0 bg-black/50"></div>
     <div class="relative container mx-auto px-6 text-center text-citrus-green-900">
-        <h2 class="section-title text-citrus-green-900 text-2xl sm:text-3xl font-bold" data-aos="fade-up">Will You Be There?</h2>
-       <p class="section-subtitle text-gray-800 text-lg sm:text-xl" data-aos="fade-up" data-aos-delay="200">PLEASE RSVP BY MARCH [DateTime] 2026</p>
+        <h2 class="text-5xl font-bold text-gray-800" data-aos="fade-up">Will You Be There?</h2>
+	<div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+       <p class="text-xl font-bold uppercase tracking-wide text-gray-500 mb-4" data-aos="fade-up" data-aos-delay="200">PLEASE RSVP BY MARCH 19, 2026</p>
             <div class="max-w-2xl mx-auto bg-white/10 backdrop-blur-md p-6 sm:p-8 rounded-lg" data-aos="fade-up" data-aos-delay="300">
             <p class="text-lg mb-6 text-gray-800">Your presence at our wedding is the greatest gift of all. Please let us know if you can make it by filling out the form below:</p>
             <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeGKSchOOEoQyRZRf8AXHKoxRgSbPCeHFTHlo5E9tvvS2A5Sw/viewform?embedded=true"  width="100%" height="667" frameborder="0" marginheight="0" marginwidth="0" style="max-width: 640px; width: 100%;">Loading…</iframe>
@@ -295,9 +350,9 @@
     <!-- Footer -->
     <footer class="py-12 bg-citrus-light text-center">
         <div class="container mx-auto px-6">
-            <p class="font-heading text-4xl text-citrus-green mb-2">Thank You</p>
-            <p class="text-gray-600">We can't wait to share our special day with you!</p>
-            <p class="mt-4 text-2xl font-heading text-citrus-green">Raymond & Karen</p>
+            <p class="font-heading text-6xl text-citrus-green mb-2" data-aos="fade-up" data-aos-delay="200">Thank You</p>
+            <p class="text-gray-600" data-aos="fade-up" data-aos-delay="300">We can't wait to share our special day with you!</p>
+             <p class="mt-4 text-6xl font-heading text-citrus-green">Raymond & Karen</p>
         </div>
     </footer>
 
@@ -400,6 +455,10 @@
                 musicOffIcon.classList.remove('hidden');
             }
         });
+
+  const lightbox = GLightbox({
+    selector: '.glightbox'
+  });
 
     </script>
 
