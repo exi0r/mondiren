@@ -13,30 +13,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 
     <style>
-        /* Custom styles for the theme */
+        /* General Styles */
         body {
             font-family: 'Lato', sans-serif;
-            background-color: #FEFBF6; /* Soft cream background */
-            color: #5D4037; /* Earthy brown text */
-            overflow-x: hidden; /* Prevent horizontal scroll from animations */
+            background-color: #FEFBF6;
+            color: #5D4037;
+            overflow-x: hidden;
         }
-        .font-heading {
-            font-family: 'Great Vibes', cursive;
-        }
-        .font-serif-display {
-            font-family: 'Playfair Display', serif;
-        }
-        .bg-citrus-light {
-            background-color: #FFF7E1; /* Light yellow */
-        }
-        .text-citrus-green {
-            color: #81A26B; /* Sage green */
-        }
-        .gradient-text {
-            background: -webkit-linear-gradient(45deg, #FFB347, #81A26B);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .font-heading { font-family: 'Great Vibes', cursive; }
+        .font-serif-display { font-family: 'Playfair Display', serif; }
+        .bg-citrus-light { background-color: #FFF7E1; }
+        .text-citrus-green { color: #81A26B; }
+
+        /* Buttons */
         .btn-primary {
             @apply inline-block px-8 py-3 text-lg font-semibold text-white bg-citrus-green rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
             background-image: linear-gradient(45deg, #81A26B 0%, #A2C18D 100%);
@@ -45,61 +34,51 @@
         .btn-secondary {
             @apply inline-block px-8 py-3 text-lg font-semibold text-citrus-green bg-transparent border-2 border-citrus-green rounded-full shadow-md hover:bg-citrus-green hover:text-white transition-colors duration-300 transform hover:-translate-y-1;
         }
-        .section-title {
-            @apply text-5xl md:text-7xl font-heading text-citrus-green mb-4;
+
+
+
+        /* --- FIX: Music Icon Visibility --- */
+        #music-toggle-btn {
+            background-color: white;
+            color: #81A26B; /* Sage green icon color */
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(129, 162, 107, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(129, 162, 107, 0); }
+        }
+        .animate-pulse-widget {
+            animation: pulse 2.5s infinite;
         }
 
-        /* Floating animations for decorative elements */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
-        }
-        .float {
-            animation: float 6s ease-in-out infinite;
-        }
 
-        /* Subtle fade in-out for decorative elements */
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 0.5; }
-        }
-        .fade-in-out {
-            animation: fadeInOut 10s ease-in-out infinite;
-        }
-
-        /* Countdown flip animation */
-        .flip-card {
-            perspective: 1000px;
-        }
-        .flip-card-inner {
-            position: relative;
+      /* --- FIX: Global Particle Background --- */
+        #particles-js {
+            position: fixed; /* Keep particles in view while scrolling */
             width: 100%;
             height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Place it behind all other content */
         }
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateX(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-        }
-        .flip-card-back {
-            transform: rotateX(180deg);
+        /* Make sections transparent to see global background */
+        .bg-transparent-for-particles {
+            background-color: transparent !important;
         }
 
-        /* Timeline for Our Story */
+        .countdown-section-content {
+             position: relative; /* Ensure content is on top of particles */
+             z-index: 1;
+        }
+
+ 
+        /* --- FIX: Timeline Z-Index --- */
         .timeline {
             position: relative;
             max-width: 1200px;
             margin: 0 auto;
         }
-        .timeline::after {
+        .timeline::after { /* The vertical line */
             content: '';
             position: absolute;
             width: 6px;
@@ -108,6 +87,7 @@
             bottom: 0;
             left: 50%;
             margin-left: -3px;
+            z-index: 1; /* Lower z-index */
         }
         .timeline-container {
             padding: 10px 40px;
@@ -115,13 +95,9 @@
             background-color: inherit;
             width: 50%;
         }
-        .timeline-container.left {
-            left: 0;
-        }
-        .timeline-container.right {
-            left: 50%;
-        }
-        .timeline-container::after {
+        .timeline-container.left { left: 0; }
+        .timeline-container.right { left: 50%; }
+        .timeline-container::after { /* The circle marker */
             content: '';
             position: absolute;
             width: 25px;
@@ -131,11 +107,9 @@
             border: 4px solid #FF9F80;
             top: 15px;
             border-radius: 50%;
-            z-index: 1;
+            z-index: 2; /* Higher z-index to appear in front */
         }
-        .right::after {
-            left: -16px;
-        }
+        .right::after { left: -16px; }
         .timeline-content {
             padding: 20px 30px;
             background-color: white;
@@ -146,13 +120,6 @@
     </style>
 </head>
 <body class="antialiased">
-
-    <div class="fixed top-1/4 left-5 w-24 h-24 z-0 opacity-40 float">
-        <img src="https://www.transparentpng.com/thumb/lemon/fZR91s-lemon-slice-hd-image.png" alt="Lemon Slice">
-    </div>
-    <div class="fixed bottom-10 right-5 w-32 h-32 z-0 opacity-30 float" style="animation-delay: -3s;">
-        <img src="https://pngimg.com/uploads/orange/orange_PNG780.png" alt="Orange">
-    </div>
 
     <div id="music-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
         <div class="bg-white rounded-lg shadow-2xl p-8 text-center max-w-sm mx-auto" data-aos="zoom-in">
@@ -165,7 +132,7 @@
         </div>
     </div>
 
-    <button id="music-toggle-btn" class="hidden fixed bottom-6 right-6 z-50 w-16 h-16 bg-citrus-green text-white rounded-full shadow-2xl flex items-center justify-center">
+    <button id="music-toggle-btn" class="hidden fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full flex items-center justify-center animate-pulse-widget">
         <svg id="music-on-icon" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" /></svg>
         <svg id="music-off-icon" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6.375a9 9 0 0 1 12.728 0M15 15.75a5.25 5.25 0 0 1-7.424 0M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" /></svg>
     </button>
@@ -195,8 +162,8 @@
 
     <section class="relative h-screen flex items-center justify-center text-center text-white" style="background: url('https://exi0r.github.io/wedding/image/background_new.png') no-repeat center center/cover;">
         <div class="absolute inset-0 bg-black/30"></div>
-        <div class="relative z-10 p-6" data-aos="fade-up" id="hero-content">
-            <h1 class="font-heading text-6xl md:text-9xl mb-4" id="hero-title">Raymond & Karen</h1>
+        <div class="relative z-10 p-6" data-aos="fade-up">
+            <h1 class="font-heading text-6xl md:text-9xl mb-4">Raymond & Karen</h1>
             <p class="text-xl md:text-2xl font-light tracking-wider mb-2 font-serif-display">WE'RE GETTING MARRIED</p>
             <p class="text-2xl md:text-3xl font-semibold bg-white/20 backdrop-blur-sm py-2 px-4 rounded-lg inline-block">
                 April 19, 2026
@@ -205,34 +172,33 @@
     </section>
 
     <section class="py-20 bg-citrus-light relative overflow-hidden">
-        <div id="particles-js" class="absolute inset-0"></div>
-        <div class="container mx-auto text-center px-6 relative">
+        <div id="particles-js"></div>
+        <div class="container mx-auto text-center px-6 countdown-section-content">
             <h2 class="font-serif-display text-5xl font-bold text-gray-800" data-aos="fade-up">Counting Down</h2>
             <div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
-            <p class="text-xl uppercase tracking-wide text-gray-500 mb-4" data-aos="fade-up" data-aos-delay="200">UNTIL OUR BIG DAY</p>
-            <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-3xl mx-auto text-citrus-green" data-aos="fade-up" data-aos-delay="400">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <div id="days" class="text-4xl md:text-6xl font-bold">0</div>
-                    <div class="text-sm uppercase tracking-widest">Days</div>
+            <p class="text-xl uppercase tracking-wide text-gray-500 mb-12" data-aos="fade-up" data-aos-delay="200">UNTIL OUR BIG DAY</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-3xl mx-auto text-citrus-green" data-aos="fade-up" data-aos-delay="400">
+                <div class="bg-white p-6 rounded-lg shadow-lg countdown-card">
+                    <div class="flipper" id="days-flipper"><div class="text-4xl md:text-6xl font-bold">0</div></div>
+                    <div class="text-sm uppercase tracking-widest mt-2">Days</div>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <div id="hours" class="text-4xl md:text-6xl font-bold">0</div>
-                    <div class="text-sm uppercase tracking-widest">Hours</div>
+                <div class="bg-white p-6 rounded-lg shadow-lg countdown-card">
+                    <div class="flipper" id="hours-flipper"><div class="text-4xl md:text-6xl font-bold">0</div></div>
+                    <div class="text-sm uppercase tracking-widest mt-2">Hours</div>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <div id="minutes" class="text-4xl md:text-6xl font-bold">0</div>
-                    <div class="text-sm uppercase tracking-widest">Minutes</div>
+                <div class="bg-white p-6 rounded-lg shadow-lg countdown-card">
+                    <div class="flipper" id="minutes-flipper"><div class="text-4xl md:text-6xl font-bold">0</div></div>
+                    <div class="text-sm uppercase tracking-widest mt-2">Minutes</div>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <div id="seconds" class="text-4xl md:text-6xl font-bold">0</div>
-                    <div class="text-sm uppercase tracking-widest">Seconds</div>
+                <div class="bg-white p-6 rounded-lg shadow-lg countdown-card">
+                    <div class="flipper" id="seconds-flipper"><div class="text-4xl md:text-6xl font-bold">0</div></div>
+                    <div class="text-sm uppercase tracking-widest mt-2">Seconds</div>
                 </div>
             </div>
         </div>
     </section>
 
-
-    <section id="story" class="py-20">
+    <section id="story" class="py-20 bg-transparent-for-particles">
         <div class="container mx-auto px-6">
             <div class="text-center mb-12">
                 <h2 class="font-serif-display text-5xl font-bold text-gray-800" data-aos="fade-up">Our Story</h2>
@@ -268,6 +234,7 @@
             </div>
         </div>
     </section>
+
 
     <section id="event" class="py-20 bg-citrus-light">
         <div class="container mx-auto px-6 text-center">
@@ -345,7 +312,7 @@
 
     <footer class="py-12 bg-citrus-light text-center">
         <div class="container mx-auto px-6">
-            <p class="font-heading text-6xl text-citrus-green mb-2 gradient-text" data-aos="fade-up">Thank You</p>
+            <p class="font-heading text-6xl text-citrus-green mb-2" data-aos="fade-up">Thank You</p>
             <p class="text-gray-600" data-aos="fade-up" data-aos-delay="100">We can't wait to share our special day with you!</p>
             <p class="mt-4 text-6xl font-heading text-citrus-green" data-aos="fade-up" data-aos-delay="200">Raymond & Karen</p>
         </div>
@@ -363,23 +330,28 @@
             easing: 'ease-in-out-cubic',
         });
 
-        // Hero Section Interactive Title
-        const heroContent = document.getElementById('hero-content');
-        heroContent.addEventListener('mousemove', (e) => {
-            const { clientX, clientY } = e;
-            const { offsetWidth, offsetHeight } = heroContent;
-            const xPos = (clientX / offsetWidth - 0.5) * 40;
-            const yPos = (clientY / offsetHeight - 0.5) * 40;
-            const heroTitle = document.getElementById('hero-title');
-            heroTitle.style.transform = `translate(${xPos}px, ${yPos}px)`;
-        });
+        // --- SCRIPT: Countdown Timer Flip Animation ---
+        function updateFlip(flipper, value) {
+            const numElement = flipper.querySelector('.font-bold');
+            const currentValue = parseInt(numElement.textContent);
+            if (value !== currentValue) {
+                numElement.textContent = value;
+                flipper.classList.add('flipped');
+                setTimeout(() => {
+                    flipper.classList.remove('flipped');
+                }, 600);
+            }
+        }
 
-
-        // Countdown Timer Logic
         const countdown = () => {
-            const countDate = new Date('April 19, 2026 00:00:00').getTime();
+            const countDate = new Date('April 19, 2026 16:30:00').getTime();
             const now = new Date().getTime();
             const gap = countDate - now;
+
+            if (gap < 0) {
+                 // Optionally handle what happens when the countdown finishes
+                return;
+            }
 
             const second = 1000;
             const minute = second * 60;
@@ -391,13 +363,13 @@
             const textMinute = Math.floor((gap % hour) / minute);
             const textSecond = Math.floor((gap % minute) / second);
 
-            document.getElementById('days').innerText = textDay > 0 ? textDay : 0;
-            document.getElementById('hours').innerText = textHour > 0 ? textHour : 0;
-            document.getElementById('minutes').innerText = textMinute > 0 ? textMinute : 0;
-            document.getElementById('seconds').innerText = textSecond > 0 ? textSecond : 0;
+            updateFlip(document.getElementById('days-flipper'), textDay);
+            updateFlip(document.getElementById('hours-flipper'), textHour);
+            updateFlip(document.getElementById('minutes-flipper'), textMinute);
+            updateFlip(document.getElementById('seconds-flipper'), textSecond);
         };
         setInterval(countdown, 1000);
-        countdown();
+        countdown(); // Initial call
 
         // Mobile Menu Toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -462,19 +434,19 @@
             selector: '.glightbox'
         });
 
-        // Particles.js
+        // --- SCRIPT: Particle.js Initialization ---
         if (document.getElementById('particles-js')) {
             particlesJS('particles-js', {
                 "particles": {
-                    "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-                    "color": { "value": "#ffdcb1" },
+                    "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": "#ffc882" },
                     "shape": { "type": "circle" },
-                    "opacity": { "value": 0.5, "random": true },
-                    "size": { "value": 3, "random": true },
+                    "opacity": { "value": 0.6, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
+                    "size": { "value": 10, "random": true, "anim": { "enable": false } },
                     "line_linked": { "enable": false },
-                    "move": { "enable": true, "speed": 1, "direction": "none", "random": true, "straight": false, "out_mode": "out" }
+                    "move": { "enable": true, "speed": 1, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
                 },
-                "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false } } },
+                "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false } }, "modes": {} },
                 "retina_detect": true
             });
         }
