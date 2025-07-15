@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raymond & Karen | We're Getting Married!</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #FEFBF6;
+            color: #5D4037;
+            overflow-x: hidden;
+        }
+        .font-heading { font-family: 'Great Vibes', cursive; }
+        .font-serif-display { font-family: 'Playfair Display', serif; }
+        .bg-citrus-light { background-color: #FFF7E1; }
+        .text-citrus-green { color: #81A26B; }
+
+        /* Buttons */
+        .btn-primary {
+            @apply inline-block px-8 py-3 text-lg font-semibold text-white bg-citrus-green rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
+            background-image: linear-gradient(45deg, #81A26B 0%, #A2C18D 100%);
+            border: none;
+        }
+        .btn-secondary {
+            @apply inline-block px-8 py-3 text-lg font-semibold text-citrus-green bg-transparent border-2 border-citrus-green rounded-full shadow-md hover:bg-citrus-green hover:text-white transition-colors duration-300 transform hover:-translate-y-1;
+        }
+
+        /* Music Icon */
+        #music-toggle-btn {
+            background-color: white;
+            color: #81A26B; /* Sage green icon color */
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(129, 162, 107, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(129, 162, 107, 0); }
+        }
+        .animate-pulse-widget {
+            animation: pulse 2.5s infinite;
+        }
+
+        /* --- NEW: Floating Petal Canvas --- */
+        #petal-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Behind all content */
+            pointer-events: none; /* Allow clicks to go through */
+        }
+        
+        /* Make sections transparent to see background */
+        .bg-transparent-for-petals {
+            background-color: transparent !important;
+        }
+
+        .content-wrapper {
+             position: relative; 
+             z-index: 1;
+        }
+
+        /* Timeline Z-Index Fix */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .timeline::after { /* The vertical line */
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #FFDAB9;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            z-index: -1; 
+        }
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        .timeline-container.left { left: 0; }
+        .timeline-container.right { left: 50%; }
+        .timeline-container::after { /* The circle marker */
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -12px;
+            background-color: white;
+            border: 4px solid #FF9F80;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1; 
+        }
+        .right::after { left: -12px; }
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    
+    <!-- NEW: Petal Canvas -->
+    <canvas id="petal-canvas"></canvas>
+
+    <div id="music-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-lg shadow-2xl p-8 text-center max-w-sm mx-auto" data-aos="zoom-in">
+            <h3 class="font-heading text-4xl text-citrus-green mb-4">Welcome!</h3>
+            <p class="text-gray-600 mb-8">This site contains background music. Would you like to play it for the best experience?</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button id="play-music-btn" class="btn-primary w-full sm:w-auto">Play Music</button>
+                <button id="no-music-btn" class="btn-secondary w-full sm:w-auto">Continue in Silence</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="music-toggle-btn" class="hidden fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full flex items-center justify-center animate-pulse-widget">
+        <svg id="music-on-icon" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" /></svg>
+        <svg id="music-off-icon" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6.375a9 9 0 0 1 12.728 0M15 15.75a5.25 5.25 0 0 1-7.424 0M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" /></svg>
+    </button>
+
+    <audio id="bg-music" loop src="https://exi0r.github.io/wedding/music/DilawInstrumental.mp3"></audio>
+
+    <header id="home" class="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-sm shadow-sm transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="text-2xl font-heading text-citrus-green">R & K</a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#story" class="nav-link">Our Story</a>
+                <a href="#event" class="nav-link">Event Details</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#rsvp" class="nav-link">RSVP</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-2xl text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white px-6 pb-4">
+            <a href="#story" class="block py-2 nav-link text-center">Our Story</a>
+            <a href="#event" class="block py-2 nav-link text-center">Event Details</a>
+            <a href="#gallery" class="block py-2 nav-link text-center">Gallery</a>
+            <a href="#rsvp" class="block py-2 nav-link text-center">RSVP</a>
+        </div>
+    </header>
+
+    <section class="relative h-screen flex items-center justify-center text-center text-white" style="background: url('https://exi0r.github.io/wedding/image/background_new.png') no-repeat center center/cover;">
+        <div class="absolute inset-0 bg-black/30"></div>
+        <div class="relative z-10 p-6" data-aos="fade-up">
+            <h1 class="font-heading text-6xl md:text-9xl mb-4">Raymond & Karen</h1>
+            <p class="text-xl md:text-2xl font-light tracking-wider mb-2 font-serif-display">WE'RE GETTING MARRIED</p>
+            <p class="text-2xl md:text-3xl font-semibold bg-white/20 backdrop-blur-sm py-2 px-4 rounded-lg inline-block">
+                April 19, 2026
+            </p>
+        </div>
+    </section>
+
+    <section class="py-20 bg-citrus-light bg-transparent-for-petals">
+        <div class="container mx-auto text-center px-6 content-wrapper">
+            <h2 class="font-serif-display text-5xl font-bold text-gray-800" data-aos="fade-up">Counting Down</h2>
+            <div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+            <p class="text-xl uppercase tracking-wide text-gray-500 mb-12" data-aos="fade-up" data-aos-delay="200">UNTIL OUR BIG DAY</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-3xl mx-auto text-citrus-green" data-aos="fade-up" data-aos-delay="400">
+                <div class="bg-white p-6 rounded-lg shadow-lg countdown-card">
+                    <div class="flipper" id="days-flipper"><div class="text-4xl md:text-6xl font-bold">0</div></div>
+                    <div class="text-sm uppercase tracking-widest mt-2">Days</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg countdown-card">
+                    <div class="flipper" id="hours-flipper"><div class="text-4xl md:text-6xl font-bold">0</div></div>
+                    <div class="text-sm uppercase tracking-widest mt-2">Hours</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg countdown-card">
+                    <div class="flipper" id="minutes-flipper"><div class="text-4xl md:text-6xl font-bold">0</div></div>
+                    <div class="text-sm uppercase tracking-widest mt-2">Minutes</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg countdown-card">
+                    <div class="flipper" id="seconds-flipper"><div class="text-4xl md:text-6xl font-bold">0</div></div>
+                    <div class="text-sm uppercase tracking-widest mt-2">Seconds</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<section id="story" class="py-20 bg-transparent-for-petals">
+  <div class="container mx-auto px-6 content-wrapper">
+    <div class="text-center mb-12">
+      <h2 class="font-serif-display text-5xl font-bold text-gray-800" data-aos="fade-up">Our Story</h2>
+      <div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+      <p class="text-xl uppercase tracking-wide text-gray-500" data-aos="fade-up" data-aos-delay="200">A JOURNEY OF LOVE</p>
+    </div>
+
+    <div class="relative timeline space-y-16">
+      <!-- How We Met -->
+      <div class="timeline-container left flex flex-col md:flex-row items-center gap-8" data-aos="fade-right">
+        <div class="flex-shrink-0 w-48 h-48 overflow-hidden rounded-full shadow-md border-4 border-yellow-100">
+          <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" alt="How we met" class="w-full h-full object-cover">
+        </div>
+        <div class="timeline-content bg-white rounded-lg p-6 shadow-lg max-w-xl">
+          <h3 class="font-serif-display text-2xl text-citrus-green mb-2">How We Met</h3>
+          <p>We met as officemates — not exactly working together, but somehow, life found a quiet way to connect us.</p>
+        </div>
+      </div>
+
+      <!-- A Spark -->
+      <div class="timeline-container right flex flex-col-reverse md:flex-row items-center gap-8" data-aos="fade-left">
+        <div class="timeline-content bg-white rounded-lg p-6 shadow-lg max-w-xl">
+          <h3 class="font-serif-display text-2xl text-citrus-green mb-2">A Spark</h3>
+          <p>Over the years, we shared a friendship that came with a few question marks and maybe a little spark we never really defined. Until one day, everything just felt right.</p>
+        </div>
+        <div class="flex-shrink-0 w-48 h-48 overflow-hidden rounded-full shadow-md border-4 border-peach-200">
+          <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" alt="A Spark" class="w-full h-full object-cover">
+        </div>
+      </div>
+
+      <!-- Making It Official -->
+      <div class="timeline-container left flex flex-col md:flex-row items-center gap-8" data-aos="fade-right">
+        <div class="flex-shrink-0 w-48 h-48 overflow-hidden rounded-full shadow-md border-4 border-lime-200">
+          <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" alt="Making It Official" class="w-full h-full object-cover">
+        </div>
+        <div class="timeline-content bg-white rounded-lg p-6 shadow-lg max-w-xl">
+          <h3 class="font-serif-display text-2xl text-citrus-green mb-2">Making It Official</h3>
+          <p>In June 2024, we finally made it official. Exactly a year later, Raymond proposed.</p>
+        </div>
+      </div>
+
+      <!-- To Forever -->
+      <div class="timeline-container right flex flex-col-reverse md:flex-row items-center gap-8" data-aos="fade-left">
+        <div class="timeline-content bg-white rounded-lg p-6 shadow-lg max-w-xl">
+          <h3 class="font-serif-display text-2xl text-citrus-green mb-2">To Forever</h3>
+          <p>Now, here we are — about to get married and beyond excited to celebrate with all of you!</p>
+          <p class="mt-4 font-bold">With love, R & K</p>
+        </div>
+        <div class="flex-shrink-0 w-48 h-48 overflow-hidden rounded-full shadow-md border-4 border-green-200">
+          <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" alt="To Forever" class="w-full h-full object-cover">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <section id="event" class="py-20 bg-citrus-light bg-transparent-for-petals">
+        <div class="container mx-auto px-6 text-center content-wrapper">
+            <h2 class="font-serif-display text-5xl font-bold text-gray-800" data-aos="fade-up">The Wedding</h2>
+            <div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+            <p class="text-xl uppercase tracking-wide text-gray-500 mb-12" data-aos="fade-up" data-aos-delay="200">JOIN US TO CELEBRATE</p>
+            <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto items-center">
+                <div class="text-center" data-aos="fade-right">
+                    <div class="mb-4">
+                        <img src="https://img.icons8.com/ios/100/81A26B/wedding-rings.png" alt="Ceremony Icon" class="mx-auto"/>
+                    </div>
+                    <h3 class="font-heading text-4xl text-citrus-green mb-2">The Ceremony & Reception</h3>
+                    <p class="text-lg">Sunday, April 19, 2026 at 4:30 PM</p>
+                    <p class="text-lg mt-4 font-semibold">The Emerald Events Place</p>
+                    <p class="text-gray-500">Cabrera Rd, Antipolo City, 1870 Rizal</p>
+                    <div class="mt-8">
+                        <a href="https://maps.app.goo.gl/v1xjURzm47ShGyDP6" target="_blank" class="btn-primary">
+                            Open in Google Maps
+                        </a>
+                    </div>
+                </div>
+                <div class="h-96 md:h-full rounded-lg shadow-xl overflow-hidden" data-aos="fade-left">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d61783.25814589349!2d121.166947!3d14.573208!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c7fb8fce5735%3A0xc84901512d88bd1e!2sThe%20Emerald%20Events%20Place!5e0!3m2!1sen!2sjp!4v1752373039070!5m2!1sen!2sjp" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-transparent-for-petals">
+        <div class="container mx-auto px-6 text-center content-wrapper">
+            <h2 class="font-serif-display text-5xl font-bold text-gray-800" data-aos="fade-up">Attire</h2>
+            <div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+            <p class="text-xl uppercase tracking-wide text-gray-500 mb-8" data-aos="fade-up" data-aos-delay="200">Soft Citrus Garden Theme</p>
+            <div class="max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="300">
+                <p class="text-lg leading-relaxed mb-8">
+                    We kindly request our guests to dress in formal attire. To complement our soft citrus garden theme, we suggest shades of peach, lemon, sage green, lavender, and other light pastel colors.
+                </p>
+                <div class="flex justify-center">
+                    <img src="https://exi0r.github.io/wedding/image/colorcode.jpg" alt="Suggested Attire Colors" class="rounded-xl shadow-md w-full max-w-lg h-auto">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-citrus-light bg-transparent-for-petals">
+        <div class="container mx-auto px-6 text-center content-wrapper">
+            <div class="text-center">
+                <h2 class="text-5xl font-bold text-gray-800" data-aos="fade-up">Gallery</h2>
+		        <div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+                <p class="text-xl uppercase tracking-wide text-gray-500 mb-4" data-aos="fade-up" data-aos-delay="200">CHERISHED MOMENTS</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <a href="https://exi0r.github.io/wedding/image/IMG_0983.jpeg" class="glightbox"
+                 data-gallery="wedding" data-aos="fade-right" data-aos-offset="300"
+                 data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="300">
+                <img src="https://exi0r.github.io/wedding/image/IMG_0983.jpeg"
+                     alt="Gallery Image 1"
+                     class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+              </a>
+              <a href="https://exi0r.github.io/wedding/image/IMG_6684.jpeg" class="glightbox"
+                 data-gallery="wedding" data-aos="fade-up" data-aos-offset="300"
+                 data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="400">
+                <img src="https://exi0r.github.io/wedding/image/IMG_6684.jpeg"
+                     alt="Gallery Image 2"
+                     class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+              </a>
+              <a href="https://exi0r.github.io/wedding/image/IMG_6774.jpeg" class="glightbox"
+                 data-gallery="wedding" data-aos="fade-left" data-aos-offset="300"
+                 data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="500">
+                <img src="https://exi0r.github.io/wedding/image/IMG_6774.jpeg"
+                     alt="Gallery Image 3"
+                     class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+              </a>
+              <a href="https://exi0r.github.io/wedding/image/IMG_6782.jpeg" class="glightbox"
+                 data-gallery="wedding" data-aos="fade-left" data-aos-offset="300"
+                 data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="600">
+                <img src="https://exi0r.github.io/wedding/image/IMG_6782.jpeg"
+                     alt="Gallery Image 4"
+                     class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+              </a>
+              <a href="https://exi0r.github.io/wedding/image/IMG_8122.jpeg" class="glightbox"
+                 data-gallery="wedding" data-aos="fade-down" data-aos-offset="300"
+                 data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="700">
+                <img src="https://exi0r.github.io/wedding/image/IMG_8122.jpeg"
+                     alt="Gallery Image 5"
+                     class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+              </a>
+              <a href="https://exi0r.github.io/wedding/image/IMG_6633.jpeg" class="glightbox"
+                 data-gallery="wedding" data-aos="fade-right" data-aos-offset="300"
+                 data-aos-easing="ease-in-out" data-aos-duration="2000" data-aos-delay="800">
+                <img src="https://exi0r.github.io/wedding/image/IMG_6633.jpeg"
+                     alt="Gallery Image 6"
+                     class="rounded-xl shadow-lg w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105" />
+              </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="rsvp" class="py-24" style="background: url('https://exi0r.github.io/wedding/image/background_new.png') no-repeat center center/cover; background-attachment: fixed;">
+        <div class="absolute inset-0 bg-black/50"></div>
+        <div class="relative container mx-auto px-6 text-center content-wrapper">
+            <h2 class="font-serif-display text-5xl font-bold text-white" data-aos="fade-up">Will You Be There?</h2>
+            <div class="mx-auto mt-4 mb-6 w-24 border-b-4 border-yellow-300 rounded" data-aos="fade-up" data-aos-delay="100"></div>
+            <p class="text-xl font-bold uppercase tracking-wide text-gray-200 mb-8" data-aos="fade-up" data-aos-delay="200">PLEASE RSVP BY MARCH 19, 2026</p>
+            <div class="max-w-2xl mx-auto bg-white/10 backdrop-blur-md p-6 sm:p-8 rounded-lg" data-aos="fade-up" data-aos-delay="300">
+                <p class="text-lg mb-6 text-white">Your presence at our wedding is the greatest gift of all. Please let us know if you can make it:</p>
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeGKSchOOEoQyRZRf8AXHKoxRgSbPCeHFTHlo5E9tvvS2A5Sw/viewform?embedded=true" width="100%" height="667" frameborder="0" marginheight="0" marginwidth="0" class="rounded-md">Loading…</iframe>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 bg-citrus-light text-center bg-transparent-for-petals">
+        <div class="container mx-auto px-6 content-wrapper">
+            <p class="font-heading text-6xl text-citrus-green mb-2" data-aos="fade-up">Thank You</p>
+            <p class="text-gray-600" data-aos="fade-up" data-aos-delay="100">We can't wait to share our special day with you!</p>
+            <p class="mt-4 text-6xl font-heading text-citrus-green" data-aos="fade-up" data-aos-delay="200">Raymond & Karen</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Removed particles.js script -->
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1200,
+            once: false,
+            offset: 50,
+            easing: 'ease-in-out-cubic',
+        });
+
+        // --- SCRIPT: Countdown Timer Flip Animation ---
+        function updateFlip(flipper, value) {
+            const numElement = flipper.querySelector('.font-bold');
+            if (!numElement) return;
+            const currentValue = parseInt(numElement.textContent);
+            if (value !== currentValue) {
+                numElement.textContent = value;
+                flipper.classList.add('flipped');
+                setTimeout(() => {
+                    flipper.classList.remove('flipped');
+                }, 600);
+            }
+        }
+
+        const countdown = () => {
+            const countDate = new Date('April 19, 2026 16:30:00').getTime();
+            const now = new Date().getTime();
+            const gap = countDate - now;
+
+            if (gap < 0) {
+                // Optionally handle what happens when the countdown finishes
+                clearInterval(countdownInterval);
+                return;
+            }
+
+            const second = 1000;
+            const minute = second * 60;
+            const hour = minute * 60;
+            const day = hour * 24;
+
+            const textDay = Math.floor(gap / day);
+            const textHour = Math.floor((gap % day) / hour);
+            const textMinute = Math.floor((gap % hour) / minute);
+            const textSecond = Math.floor((gap % minute) / second);
+
+            updateFlip(document.getElementById('days-flipper'), textDay);
+            updateFlip(document.getElementById('hours-flipper'), textHour);
+            updateFlip(document.getElementById('minutes-flipper'), textMinute);
+            updateFlip(document.getElementById('seconds-flipper'), textSecond);
+        };
+        const countdownInterval = setInterval(countdown, 1000);
+        countdown(); // Initial call
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetElement = document.querySelector(this.getAttribute('href'));
+                if(targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Music Player Logic
+        const musicModal = document.getElementById('music-modal');
+        const playMusicBtn = document.getElementById('play-music-btn');
+        const noMusicBtn = document.getElementById('no-music-btn');
+        const bgMusic = document.getElementById('bg-music');
+        const musicToggleBtn = document.getElementById('music-toggle-btn');
+        const musicOnIcon = document.getElementById('music-on-icon');
+        const musicOffIcon = document.getElementById('music-off-icon');
+
+        const startMusic = () => {
+            bgMusic.play().catch(error => console.log("Autoplay was prevented.", error));
+            musicModal.style.display = 'none';
+            musicToggleBtn.classList.remove('hidden');
+            musicOnIcon.classList.remove('hidden');
+            musicOffIcon.classList.add('hidden');
+        };
+        const stopMusic = () => {
+            musicModal.style.display = 'none';
+            musicToggleBtn.classList.remove('hidden');
+            musicOnIcon.classList.add('hidden');
+            musicOffIcon.classList.remove('hidden');
+        };
+        playMusicBtn.addEventListener('click', startMusic);
+        noMusicBtn.addEventListener('click', stopMusic);
+        musicToggleBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicOnIcon.classList.remove('hidden');
+                musicOffIcon.classList.add('hidden');
+            } else {
+                bgMusic.pause();
+                musicOnIcon.classList.add('hidden');
+                musicOffIcon.classList.remove('hidden');
+            }
+        });
+
+        // GLightbox
+        const lightbox = GLightbox({
+            selector: '.glightbox'
+        });
+
+        // --- SCRIPT: Floating Petal Animation ---
+        const canvas = document.getElementById('petal-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let petals = [];
+        let mouse = { x: null, y: null };
+        
+        const petalImages = [
+            "https://exi0r.github.io/wedding/image/pngegg.png",
+            "https://exi0r.github.io/wedding/image/petal2.png",
+            "https://exi0r.github.io/wedding/image/petal4.png",
+            "https://exi0r.github.io/wedding/image/yellowpet1.png",
+            "https://exi0r.github.io/wedding/image/yellowpet3.png",
+            "https://exi0r.github.io/wedding/image/yellowpet4.png",
+            "https://exi0r.github.io/wedding/image/yellowpet2.png"
+        ].map(src => {
+            const img = new Image();
+            img.src = src;
+            return img;
+        });
+        
+        const numPetals = 40;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Petal {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height * 2 - canvas.height;
+                this.w = 25 + Math.random() * 15;
+                this.h = 20 + Math.random() * 10;
+                this.opacity = this.w / 40;
+                this.image = petalImages[Math.floor(Math.random() * petalImages.length)];
+                this.xSpeed = 1 + Math.random();
+                this.ySpeed = 0.5 + Math.random() * 0.5;
+                this.flip = Math.random();
+                this.flipSpeed = Math.random() * 0.03;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = Math.random() * 0.01 - 0.005;
+            }
+
+            draw() {
+                if (this.y > canvas.height || this.x > canvas.width) {
+                    this.x = -this.w;
+                    this.y = Math.random() * canvas.height * 2 - canvas.height;
+                }
+                
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x + this.w / 2, this.y + this.h / 2);
+                ctx.rotate(this.rotation);
+                ctx.drawImage(this.image, -this.w / 2, -this.h / 2, this.w, this.h * Math.cos(this.flip));
+                ctx.restore();
+            }
+
+            update() {
+                this.y += this.ySpeed;
+                this.x += Math.sin(this.y / 50) * this.xSpeed;
+                this.rotation += this.rotationSpeed;
+                this.flip += this.flipSpeed;
+
+                // Mouse interaction
+                if (mouse.x !== null) {
+                    let dx = this.x - mouse.x;
+                    let dy = this.y - mouse.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        const force = (100 - distance) / 100;
+                        this.x += (dx / distance) * force * 5;
+                        this.y += (dy / distance) * force * 5;
+                    }
+                }
+
+
+                if (this.y > canvas.height + 50) {
+                    this.y = -50;
+                    this.x = Math.random() * canvas.width;
+                }
+                this.draw();
+            }
+        }
+
+        function initPetals() {
+            petals = [];
+            for (let i = 0; i < numPetals; i++) {
+                petals.push(new Petal());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            petals.forEach(petal => petal.update());
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initPetals();
+        });
+
+        // Use the main body for mousemove to track cursor everywhere
+        document.body.addEventListener('mousemove', e => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        document.body.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+        
+        // Start after images have a chance to load
+        window.onload = function() {
+            resizeCanvas();
+            initPetals();
+            // Check if all images are loaded before starting animation
+            let loadedCount = 0;
+            petalImages.forEach(img => {
+                img.onload = () => {
+                    loadedCount++;
+                    if (loadedCount === petalImages.length) {
+                        animate();
+                    }
+                }
+                // If already loaded (from cache)
+                if(img.complete) {
+                    loadedCount++;
+                     if (loadedCount === petalImages.length) {
+                        animate();
+                    }
+                }
+            });
+        };
+
+    </script>
+</body>
+</html>
